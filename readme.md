@@ -4,7 +4,7 @@ With Cron Logger the wp-cron.php runs are logged. They are available in **Tools*
 
 ## Custom logs
 
-If you have a cron run in your plugin that does not use the wp-cron.php, you can still use Cron Logger. Register you own Plugin with **cron_logger_init** action.
+If you have a cron run in your plugin that does not use the wp-cron.php, you can still use Cron Logger. Register your own Plugin with **cron_logger_init** action.
 
 ```php
 /**
