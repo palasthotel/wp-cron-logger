@@ -11,7 +11,7 @@ If you have a cron run in your plugin that does not use the wp-cron.php, you can
  * @param CronLogger/Plugin $logger
  */
 function my_plugin_init_logger($logger){
-	// start a log session
+	// start a log session (call only once per session)
 	$logger->log->start('Log my Plugin');
 	
 	// and now you can add logging steps after operations like
