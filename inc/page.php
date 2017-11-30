@@ -45,12 +45,19 @@ class Page {
 	}
 
 	function render() {
-		$timezone = get_option('timezone_string');
-		$time     = new \DateTime("now", new \DateTimeZone($timezone));
-		$args = $this->getArgs();
 		?>
 		<div class="wrap">
 			<h2>Cron Logs</h2>
+			<?php
+			$timezone = get_option('timezone_string');
+			try{
+				$time = new \DateTime("now", new \DateTimeZone($timezone));
+			} catch (\Exception $e){
+				echo "<p>".__("Missing »timezone_string« entry in options table. Please fix! Otherwise execution times could be wrong.", Plugin::DOMAIN)."</p>";
+				$time = new \DateTime('now');
+			}
+			$args = $this->getArgs();
+			?>
 
 			<form method="GET" action="<?php echo admin_url('tools.php'); ?>">
 				<input type="hidden" name="page" value="cron-logs"/>
