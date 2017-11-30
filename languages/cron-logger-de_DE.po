@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Cron Logger\n"
-"POT-Creation-Date: 2017-11-30 16:51+0100\n"
-"PO-Revision-Date: 2017-11-30 16:54+0100\n"
+"POT-Creation-Date: 2017-11-30 17:01+0100\n"
+"PO-Revision-Date: 2017-11-30 17:03+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -33,7 +33,11 @@ msgstr ""
 msgid "Registered hooks: %s"
 msgstr "Registrierte Hooks: %s"
 
-#: inc/page.php:56
+#: inc/page.php:28 inc/page.php:29
+msgid "Cron Logs"
+msgstr "Cron Protokoll"
+
+#: inc/page.php:63
 msgid ""
 "Missing »timezone_string« entry in options table. Please fix! Otherwise "
 "execution times could be wrong."
@@ -41,13 +45,45 @@ msgstr ""
 "»timezone_string« Eintrag in der options Tabelle fehlt. Bitte beheben! "
 "Andernfalls könnten die Ausführungszeitpunkte falsch angezeigt werden."
 
+#: inc/page.php:72
+msgid "Minimum duration of x seconds"
+msgstr "Mindestlaufzeit von x Sekunden"
+
+#: inc/page.php:79
+msgid "Page"
+msgstr "Seite"
+
+#: inc/page.php:85
+msgid "Logs per Page"
+msgstr "Einträge pro Seite"
+
+#: inc/page.php:93
+msgid "Filter"
+msgstr "Filter"
+
+#: inc/page.php:97
+msgid "Toggle open/close log details"
+msgstr "Alle Protokolle öffnen/schließen"
+
+#: inc/page.php:104
+msgid "Executed"
+msgstr "Ausgeführt"
+
+#: inc/page.php:106
+msgid "Duration"
+msgstr "Laufzeit"
+
+#: inc/page.php:107
+msgid "Info"
+msgstr "Info"
+
 #. Plugin Name of the plugin/theme
 msgid "Cron Logger"
-msgstr "Cron Logger"
+msgstr "Cron Protokoll"
 
 #. Description of the plugin/theme
 msgid "Logs for cron runs."
-msgstr "Protokolliert Cron Durchläufe."
+msgstr "Protokolliert Cron Prozesse."
 
 #. Author of the plugin/theme
 msgid "Palasthotel <rezeption@palasthotel.de> (Edward Bock)"
