@@ -8,17 +8,18 @@ If you have a cron run in your plugin that does not use the wp-cron.php, you can
 
 ```php
 /**
- * @param CronLogger/Log $log
+ * @param CronLogger/Plugin $logger
  */
-function my_plugin_init_logger($log){
-	$log->start('Log my Plugin');
+function my_plugin_init_logger($logger){
+	// start a log session
+	$logger->log->start('Log my Plugin');
 	
 	// and now you can add logging steps after operations like
-	$log->addInfo("Now my Plugin starts doing this...");
+	$logger->log->addInfo("Now my Plugin starts doing this...");
 	
 	// you can log passed time in seconds too
 	$duration = 3;
-	$log->addInfo("Now my Plugin has done that...", $duration);
+	$logger->log->addInfo("Now my Plugin has done that...", $duration);
 }
 add_action("cron_logger_init", "my_plugin_init_logger");
 ```
