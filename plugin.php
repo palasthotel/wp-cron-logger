@@ -8,6 +8,7 @@
  * Author: Palasthotel <rezeption@palasthotel.de> (Edward Bock)
  * Author URI: https://palasthotel.de
  * Domain Path: /languages
+ * Text Domain: cron-logger
  * @copyright Copyright (c) 2017, Palasthotel
  * @package Palasthotel\CronLogger
  */

@@ -43,7 +43,7 @@ class WPCron {
 
 		$msg = __("No registered hooks? Something went wrong. There should be at least WordPress core cron hooks.", Plugin::DOMAIN);
 		if(count($registered) > 0){
-			$msg = sprintf(__("Register Hooks: %s", Plugin::DOMAIN), implode(', ', $registered));
+			$msg = sprintf(__("Registered hooks: %s", Plugin::DOMAIN), implode(', ', $registered));
 		}
 		$this->log->addInfo($msg);
 	}
