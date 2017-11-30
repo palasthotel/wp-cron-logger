@@ -14,7 +14,7 @@ function my_plugin_init_logger($logger){
 	// start a log session (call only once per session)
 	$logger->log->start('Log my Plugin');
 	
-	// and now you can add logging steps after operations like
+	// now you can add logs to the session
 	$logger->log->addInfo("Now my Plugin starts doing this...");
 	
 	// you can log passed time in seconds too
