@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Cron Logger
- * Description: Logging of crons.
+ * Description: Logs for cron runs.
  * Version: 1.0
  * Requires at least: 4.8
  * Tested up to: 4.9.1
