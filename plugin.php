@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Cron Logger
- * Description: Logs for cron runs.
+ * Description: Logs for wp-cron.php runs.
  * Version: 1.0.1
  * Requires at least: 4.8
  * Tested up to: 4.9.1
