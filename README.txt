@@ -1,5 +1,5 @@
 === Cron Logger ===
-Contributors: edwardbock
+Contributors: edwardbock, palasthotel
 Donate link: http://palasthotel.de/
 Tags: tool, log, debug, cron, wp-cron
 Requires at least: 4.8
