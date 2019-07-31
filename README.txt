@@ -30,6 +30,8 @@ Have you ever wondered what you WordPress is doing in wp-cron.php? Now you can s
 
 = 1.0.2 =
  * scheduled posts status transition
+ * clean logs
+ * filer cron_logger_expire can modify the days before logs expire
 
 = 1.0.1 =
  * Translations

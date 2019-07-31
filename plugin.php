@@ -30,6 +30,8 @@ class Plugin {
 	const ACTION_WP_CRON_START = "cron_logger_wp_cron_start";
 	const ACTION_WP_CRON_FINISH = "cron_logger_wp_cron_shutdown";
 
+	const FILTER_EXPIRE = "cron_logger_expire";
+
 	/**
 	 * ---------------------------------------------
 	 * object instance

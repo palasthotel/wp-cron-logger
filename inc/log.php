@@ -126,10 +126,11 @@ class Log {
 	function clean(){
 		global $wpdb;
 		$table = $this->tableName();
+		$days = apply_filters(Plugin::FILTER_EXPIRE, 40);
 		$parentIds = "SELECT id FROM (".
 		                "SELECT id FROM mon_cron_logs WHERE ".
 		                "parent_id IS NULL AND ".
-		                "executed < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 40 day))".
+		                "executed < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL $days day))".
 		             ") as parent_id";
 
 		$wpdb->query("DELETE FROM $table WHERE parent_id IN ($parentIds)");
