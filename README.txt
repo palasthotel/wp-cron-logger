@@ -3,8 +3,8 @@ Contributors: edwardbock, palasthotel
 Donate link: http://palasthotel.de/
 Tags: tool, log, debug, cron, wp-cron
 Requires at least: 4.8
-Tested up to: 4.9.1
-Stable tag: 1.0.1
+Tested up to: 5.2.2
+Stable tag: 1.0.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl
 
@@ -12,7 +12,7 @@ Logs wp-cron.php runs.
 
 == Description ==
 
-Have you ever wonderd what you WordPress is doing in wp-cron.php? Now you can see it. This plugin logs every schedule.
+Have you ever wondered what you WordPress is doing in wp-cron.php? Now you can see it. This plugin logs every schedule.
 
 == Installation ==
 
@@ -27,6 +27,9 @@ Have you ever wonderd what you WordPress is doing in wp-cron.php? Now you can se
 
 
 == Changelog ==
+
+= 1.0.2 =
+ * scheduled posts status transition
 
 = 1.0.1 =
  * Translations

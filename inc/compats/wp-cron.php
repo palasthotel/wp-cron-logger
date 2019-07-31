@@ -15,6 +15,10 @@ class WPCron {
 		if ( defined('DOING_CRON') && DOING_CRON ) {
 			add_action("plugins_loaded", array($this, "start"));
 			add_action("shutdown", array($this, "shutdown"));
+
+			// publish posts schedule logs
+			add_action('publish_future_post', array($this, 'publish_future_post_start'), 1, 1);
+			add_action('publish_future_post', array($this, 'publish_future_post_finish'), 100, 1);
 		}
 	}
 
@@ -54,6 +58,36 @@ class WPCron {
 	}
 	function after_execute_cron_hook(){
 		$this->log->addInfo("Finished ".current_filter(), time() - $this->times[current_filter()]);
+	}
+
+	/**
+	 * start future post schedule
+	 * @param int $post_id
+	 */
+	public function publish_future_post_start($post_id){
+		$this->log->addInfo("Check post -> $post_id");
+		add_action('transition_post_status', array($this, 'transition_post_status'),10,3);
+	}
+
+	/**
+	 * after future post schedule finished
+	 * @param $post
+	 */
+	public function publish_future_post_finish($post){
+		remove_action('transition_post_status', array($this, 'transition_post_status'),10);
+	}
+
+	/**
+	 * log which posts were published
+	 *
+	 * @param string $new_status
+	 * @param string $old_status
+	 * @param \WP_Post $post
+	 */
+	function transition_post_status($new_status, $old_status, $post){
+		$this->log->addInfo(
+			"Status changed from <b>$old_status</b> -> <b>$new_status</b> of '{$post->post_title}'"
+		);
 	}
 
 }
