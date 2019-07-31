@@ -31,6 +31,7 @@ class WPCron {
 	function shutdown() {
 		$this->log->update($this->timer->getDuration(), 'Done wp-cron.php 🎉 ');
 		do_action(Plugin::ACTION_WP_CRON_FINISH);
+		$this->log->clean();
 	}
 
 	function addCronActions(){

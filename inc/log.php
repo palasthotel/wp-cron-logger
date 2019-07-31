@@ -123,6 +123,19 @@ class Log {
 		);
 	}
 
+	function clean(){
+		global $wpdb;
+		$table = $this->tableName();
+		$parentIds = "SELECT id FROM (".
+		                "SELECT id FROM mon_cron_logs WHERE ".
+		                "parent_id IS NULL AND ".
+		                "executed < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 40 day))".
+		             ") as parent_id";
+
+		$wpdb->query("DELETE FROM $table WHERE parent_id IN ($parentIds)");
+		$wpdb->query("DELETE FROM $table WHERE id IN ($parentIds)");
+	}
+
 	function createTable(){
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta("CREATE TABLE IF NOT EXISTS ".$this->tableName() . " 
