@@ -2,9 +2,9 @@
 /**
  * Plugin Name: Cron Logger
  * Description: Logs for wp-cron.php runs.
- * Version: 1.0.1
+ * Version: 1.0.3
  * Requires at least: 4.8
- * Tested up to: 4.9.1
+ * Tested up to: 5.2.2
  * Author: Palasthotel <rezeption@palasthotel.de> (Edward Bock)
  * Author URI: https://palasthotel.de
  * Domain Path: /languages

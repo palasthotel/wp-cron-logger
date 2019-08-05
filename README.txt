@@ -4,7 +4,7 @@ Donate link: http://palasthotel.de/
 Tags: tool, log, debug, cron, wp-cron
 Requires at least: 4.8
 Tested up to: 5.2.2
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl
 
@@ -27,6 +27,9 @@ Have you ever wondered what you WordPress is doing in wp-cron.php? Now you can s
 
 
 == Changelog ==
+
+= 1.0.3 =
+ * Bugfix: database error while cleaning logs
 
 = 1.0.2 =
  * scheduled posts status transition
