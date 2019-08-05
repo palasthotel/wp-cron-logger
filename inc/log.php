@@ -128,7 +128,7 @@ class Log {
 		$table = $this->tableName();
 		$days = apply_filters(Plugin::FILTER_EXPIRE, 40);
 		$parentIds = "SELECT id FROM (".
-		                "SELECT id FROM mon_cron_logs WHERE ".
+		                "SELECT id FROM ".$this->tableName()." WHERE ".
 		                "parent_id IS NULL AND ".
 		                "executed < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL $days day))".
 		             ") as parent_id";
