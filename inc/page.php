@@ -56,7 +56,7 @@ class Page {
 		<div class="wrap">
 			<h2>Cron Logs</h2>
 			<?php
-			$timezone = get_option('timezone_string');
+            $timezone = wp_timezone_string();
 			try {
 				$time = new \DateTime("now", new \DateTimeZone($timezone));
 			} catch (\Exception $e) {

@@ -28,6 +28,10 @@ Have you ever wondered what you WordPress is doing in wp-cron.php? Now you can s
 
 == Changelog ==
 
+= 1.0.4
+ * Optimization: Multisite plugin activation (Thanks to @jcleaveland for report)
+ * Optimization: use wp_timezone_string function (Thanks to @pothi for report)
+
 = 1.0.3 =
  * Bugfix: database error while cleaning logs
 

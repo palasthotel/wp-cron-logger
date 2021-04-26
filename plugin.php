@@ -110,7 +110,27 @@ class Plugin {
 	/**
 	 * on activation
 	 */
-	function on_activate() {
+	function on_activate($network_wide) {
+		// check if this is a multisite installation
+		if( function_exists('is_multisite') && is_multisite() ) {
+
+			// check if it is a network activation
+			if( $network_wide ) {
+				$network_site = get_network()->site_id;
+				$args = array( 'fields' => 'ids' );
+				$site_ids = get_sites( $args );
+
+				// run the activation function for each blog id
+				foreach ( $site_ids as $site_id ) {
+					switch_to_blog( $site_id );
+					$this->log->createTable();
+				}
+
+				// switch back to the network site
+				switch_to_blog( $network_site );
+				return;
+			}
+		}
 		$this->log->createTable();
 	}
 }
