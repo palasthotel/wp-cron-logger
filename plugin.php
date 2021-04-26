@@ -4,7 +4,7 @@
  * Description: Logs for wp-cron.php runs.
  * Version: 1.0.3
  * Requires at least: 4.8
- * Tested up to: 5.2.2
+ * Tested up to: 5.7.1
  * Author: Palasthotel <rezeption@palasthotel.de> (Edward Bock)
  * Author URI: https://palasthotel.de
  * Domain Path: /languages
