@@ -38,14 +38,15 @@ class Plugin {
 	 * ---------------------------------------------
 	 */
 
-	/** @var Plugin	 */
+	/** @var Plugin */
 	private static $instance;
 
 	/** @return Plugin */
 	public static function instance() {
-		if(Plugin::$instance == null ) {
+		if ( Plugin::$instance == null ) {
 			Plugin::$instance = new Plugin();
 		}
+
 		return Plugin::$instance;
 	}
 
@@ -82,26 +83,26 @@ class Plugin {
 		 */
 		load_plugin_textdomain(
 			Plugin::DOMAIN,
-			FALSE,
+			false,
 			dirname( plugin_basename( __FILE__ ) ) . '/languages'
 		);
 
-		require_once dirname(__FILE__). '/inc/timer.php';
+		require_once dirname( __FILE__ ) . '/inc/timer.php';
 		$this->timer = new Timer();
 
-		require_once dirname(__FILE__) . '/inc/log.php';
-		$this->log = new Log($this);
+		require_once dirname( __FILE__ ) . '/inc/log.php';
+		$this->log = new Log( $this );
 
 		// compatible processes
-		require_once dirname(__FILE__). '/inc/compats.php';
-		$this->compats = new Compats($this);
+		require_once dirname( __FILE__ ) . '/inc/compats.php';
+		$this->compats = new Compats( $this );
 
-		require_once dirname(__FILE__) . '/inc/page.php';
-		$this->page = new Page($this);
+		require_once dirname( __FILE__ ) . '/inc/page.php';
+		$this->page = new Page( $this );
 
 		register_activation_hook( __FILE__, array( $this, 'on_activate' ) );
 
-		if($this->isDebug){
+		if ( $this->isDebug ) {
 			// in debug always try to create table
 			$this->log->createTable();
 		}
@@ -110,15 +111,15 @@ class Plugin {
 	/**
 	 * on activation
 	 */
-	function on_activate($network_wide) {
+	function on_activate( $network_wide ) {
 		// check if this is a multisite installation
-		if( function_exists('is_multisite') && is_multisite() ) {
+		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 
 			// check if it is a network activation
-			if( $network_wide ) {
+			if ( $network_wide ) {
 				$network_site = get_network()->site_id;
-				$args = array( 'fields' => 'ids' );
-				$site_ids = get_sites( $args );
+				$args         = array( 'fields' => 'ids' );
+				$site_ids     = get_sites( $args );
 
 				// run the activation function for each blog id
 				foreach ( $site_ids as $site_id ) {
@@ -128,6 +129,7 @@ class Plugin {
 
 				// switch back to the network site
 				switch_to_blog( $network_site );
+
 				return;
 			}
 		}

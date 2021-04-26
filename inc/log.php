@@ -8,18 +8,20 @@ class Log {
 	private $log_id = null;
 	private $errors = array();
 
-	public function __construct(Plugin $plugin) {
+	public function __construct( Plugin $plugin ) {
 		$this->plugin = $plugin;
 	}
 
-	function tableName(){
+	function tableName() {
 		global $wpdb;
-		return $wpdb->prefix."cron_logs";
+
+		return $wpdb->prefix . "cron_logs";
 	}
 
-	function start($info = ""){
-		if($this->log_id != null){
-			error_log("Only start logger once per session.",4);
+	function start( $info = "" ) {
+		if ( $this->log_id != null ) {
+			error_log( "Only start logger once per session.", 4 );
+
 			return;
 		}
 		global $wpdb;
@@ -28,7 +30,7 @@ class Log {
 			array(
 				'executed' => $this->plugin->timer->getStart(),
 				'duration' => 0,
-				'info' => "Running ⏳ $info",
+				'info'     => "Running ⏳ $info",
 			),
 			array(
 				'%d',
@@ -39,18 +41,19 @@ class Log {
 		$this->log_id = $wpdb->insert_id;
 	}
 
-	function update($duration, $info = null){
+	function update( $duration, $info = null ) {
 
-		if($this->log_id == null){
+		if ( $this->log_id == null ) {
 			$this->start();
 		}
-		$data = array('duration' => $duration);
-		$data_format = array('%d');
-		if($info != null){
-			$data['info'] = $info;
+		$data        = array( 'duration' => $duration );
+		$data_format = array( '%d' );
+		if ( $info != null ) {
+			$data['info']  = $info;
 			$data_format[] = '%s';
 		}
 		global $wpdb;
+
 		return $wpdb->update(
 			$this->tablename(),
 			$data,
@@ -64,15 +67,15 @@ class Log {
 		);
 	}
 
-	function addInfo($message, $duration = null){
+	function addInfo( $message, $duration = null ) {
 		global $wpdb;
 		$result = $wpdb->insert(
 			$this->tableName(),
 			array(
 				'parent_id' => $this->log_id,
-				'info' => $message,
-				'executed' => time(),
-				'duration' => $duration,
+				'info'      => $message,
+				'executed'  => time(),
+				'duration'  => $duration,
 			),
 			array(
 				'%d',
@@ -81,11 +84,11 @@ class Log {
 				'%d',
 			)
 		);
-		if($result == false){
+		if ( $result == false ) {
 			echo $wpdb->last_query;
-			$error_message = "🚨 ".$wpdb->last_query;
+			$error_message  = "🚨 " . $wpdb->last_query;
 			$this->errors[] = $error_message;
-			error_log("Cron Logger: ".$error_message);
+			error_log( "Cron Logger: " . $error_message );
 		} else {
 			$this->update(
 				$this->plugin->timer->getDuration()
@@ -94,52 +97,53 @@ class Log {
 
 	}
 
-	function getList($args = array()){
+	function getList( $args = array() ) {
 		$args = (object) array_merge(
 			array(
-				"count" => 15,
-				"page" => 1,
+				"count"       => 15,
+				"page"        => 1,
 				"min_seconds" => null,
 			),
 			$args
 		);
 		global $wpdb;
-		$count = $args->count;
-		$page = $args->page;
-		$offset = $count * ($page-1);
+		$count  = $args->count;
+		$page   = $args->page;
+		$offset = $count * ( $page - 1 );
 
-		$where_min_seconds = ($args->min_seconds != null)? "AND duration >= ".$args->min_seconds: "";
+		$where_min_seconds = ( $args->min_seconds != null ) ? "AND duration >= " . $args->min_seconds : "";
 
 		return $wpdb->get_results(
-			"SELECT * FROM ".$this->tableName()." WHERE parent_id IS NULL ".$where_min_seconds." ORDER BY executed DESC LIMIT $offset, $count"
+			"SELECT * FROM " . $this->tableName() . " WHERE parent_id IS NULL " . $where_min_seconds . " ORDER BY executed DESC LIMIT $offset, $count"
 		);
 	}
 
-	function getSublist($log_id , $count = 50, $page = 0){
+	function getSublist( $log_id, $count = 50, $page = 0 ) {
 		global $wpdb;
 		$offset = $count * $page;
+
 		return $wpdb->get_results(
-			"SELECT * FROM ".$this->tableName()." WHERE parent_id = $log_id  ORDER BY id DESC LIMIT $offset, $count"
+			"SELECT * FROM " . $this->tableName() . " WHERE parent_id = $log_id  ORDER BY id DESC LIMIT $offset, $count"
 		);
 	}
 
-	function clean(){
+	function clean() {
 		global $wpdb;
-		$table = $this->tableName();
-		$days = apply_filters(Plugin::FILTER_EXPIRE, 40);
-		$parentIds = "SELECT id FROM (".
-		                "SELECT id FROM ".$this->tableName()." WHERE ".
-		                "parent_id IS NULL AND ".
-		                "executed < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL $days day))".
+		$table     = $this->tableName();
+		$days      = apply_filters( Plugin::FILTER_EXPIRE, 40 );
+		$parentIds = "SELECT id FROM (" .
+		             "SELECT id FROM " . $this->tableName() . " WHERE " .
+		             "parent_id IS NULL AND " .
+		             "executed < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL $days day))" .
 		             ") as parent_id";
 
-		$wpdb->query("DELETE FROM $table WHERE parent_id IN ($parentIds)");
-		$wpdb->query("DELETE FROM $table WHERE id IN ($parentIds)");
+		$wpdb->query( "DELETE FROM $table WHERE parent_id IN ($parentIds)" );
+		$wpdb->query( "DELETE FROM $table WHERE id IN ($parentIds)" );
 	}
 
-	function createTable(){
+	function createTable() {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		dbDelta("CREATE TABLE IF NOT EXISTS ".$this->tableName() . " 
+		dbDelta( "CREATE TABLE IF NOT EXISTS " . $this->tableName() . " 
 		(
 		 id bigint(20) unsigned not null auto_increment,
 		 parent_id bigint(20) unsigned default null,
@@ -149,6 +153,6 @@ class Log {
 		 primary key (id),
 		 key ( executed ),
 		 key (duration)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;" );
 	}
 }

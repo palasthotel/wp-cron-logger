@@ -11,9 +11,10 @@ class Timer {
 		$this->start = time();
 	}
 
-	function getStart(){
+	function getStart() {
 		return $this->start;
 	}
+
 	function getDuration() {
 		return time() - $this->start;
 	}
