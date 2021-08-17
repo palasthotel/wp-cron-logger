@@ -2,8 +2,8 @@
 Contributors: edwardbock, palasthotel
 Donate link: http://palasthotel.de/
 Tags: tool, log, debug, cron, wp-cron
-Requires at least: 4.8
-Tested up to: 5.7.1
+Requires at least: 5.3
+Tested up to: 5.8
 Stable tag: 1.0.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl
