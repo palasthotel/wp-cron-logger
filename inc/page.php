@@ -37,19 +37,19 @@ class Page {
 	}
 
 	function getArgs() {
-		$args               = (object) array();
+		$args        = (object) array();
 		$args->items = 10;
-		if(!empty($_GET[self::ARG_ITEMS]) && intval($_GET[self::ARG_ITEMS]) > 0){
-			$args->items = intval($_GET[self::ARG_ITEMS]);
+		if ( ! empty( $_GET[ self::ARG_ITEMS ] ) && intval( $_GET[ self::ARG_ITEMS ] ) > 0 ) {
+			$args->items = intval( $_GET[ self::ARG_ITEMS ] );
 		}
 		$args->page = 1;
-		if(!empty($_GET[self::ARG_PAGE]) && intval($_GET[self::ARG_PAGE]) > 0){
-			$args->page = intval($_GET[self::ARG_PAGE]);
+		if ( ! empty( $_GET[ self::ARG_PAGE ] ) && intval( $_GET[ self::ARG_PAGE ] ) > 0 ) {
+			$args->page = intval( $_GET[ self::ARG_PAGE ] );
 		}
 		$args->duration_min = null;
-		if(!empty($_GET[self::ARG_DURATION_MIN])){
-		    $args->duration_min = intval($_GET[self::ARG_DURATION_MIN]);
-        }
+		if ( ! empty( $_GET[ self::ARG_DURATION_MIN ] ) ) {
+			$args->duration_min = intval( $_GET[ self::ARG_DURATION_MIN ] );
+		}
 
 		return $args;
 	}
