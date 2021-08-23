@@ -4,7 +4,7 @@ Donate link: http://palasthotel.de/
 Tags: tool, log, debug, cron, wp-cron
 Requires at least: 5.3
 Tested up to: 5.8
-Stable tag: 1.0.5
+Stable tag: 1.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl
 
@@ -27,6 +27,9 @@ Have you ever wondered what you WordPress is doing in wp-cron.php? Now you can s
 
 
 == Changelog ==
+
+= 1.1.0
+ * Refactoring: Code cleanup
 
 = 1.0.5
  * Fix: missing sanitization fix thanks community member report.

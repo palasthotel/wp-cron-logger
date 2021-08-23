@@ -1,7 +1,9 @@
 <?php
 
-namespace CronLogger;
+namespace CronLogger\Services;
 
+
+use CronLogger\Plugin;
 
 class WPCron {
 

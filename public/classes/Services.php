@@ -3,13 +3,17 @@
 namespace CronLogger;
 
 
-class Compats {
+use CronLogger\Services\SolrPlugin;
+use CronLogger\Services\WPCron;
+
+/**
+ * @property WPCron wp_cron
+ * @property SolrPlugin solr
+ */
+class Services {
 	public function __construct( Plugin $plugin ) {
 
-		require_once dirname( __FILE__ ) . '/compats/wp-cron.php';
 		$this->wp_cron = new WPCron( $plugin );
-
-		require_once dirname( __FILE__ ) . '/compats/solr-plugin.php';
 		$this->solr = new SolrPlugin( $plugin );
 
 		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
