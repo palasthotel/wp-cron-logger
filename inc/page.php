@@ -38,15 +38,18 @@ class Page {
 
 	function getArgs() {
 		$args               = (object) array();
-		$args->items        = getARGValue( self::ARG_ITEMS, 10, function ( $val ) {
-			return intval( $val ) > 0;
-		} );
-		$args->page         = getARGValue( self::ARG_PAGE, 1, function ( $val ) {
-			return intval( $val ) > 0;
-		} );
-		$args->duration_min = getARGValue( self::ARG_DURATION_MIN, null, function ( $val ) {
-			return intval( $val ) >= 0;
-		} );
+		$args->items = 10;
+		if(!empty($_GET[self::ARG_ITEMS]) && intval($_GET[self::ARG_ITEMS]) > 0){
+			$args->items = intval($_GET[self::ARG_ITEMS]);
+		}
+		$args->page = 1;
+		if(!empty($_GET[self::ARG_PAGE]) && intval($_GET[self::ARG_PAGE]) > 0){
+			$args->page = intval($_GET[self::ARG_PAGE]);
+		}
+		$args->duration_min = null;
+		if(!empty($_GET[self::ARG_DURATION_MIN])){
+		    $args->duration_min = intval($_GET[self::ARG_DURATION_MIN]);
+        }
 
 		return $args;
 	}
@@ -172,15 +175,4 @@ function getDurationString( $duration ) {
 	}
 
 	return $duration . "s";
-}
-
-/**
- * @param $key
- * @param $default
- * @param null|callable $valid
- *
- * @return mixed
- */
-function getARGValue( $key, $default, $valid = null ) {
-	return ( ! empty( $_GET[ $key ] ) && ( $valid == null || $valid( $_GET[ $key ] ) ) ) ? $_GET[ $key ] : $default;
 }
