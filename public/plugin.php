@@ -2,14 +2,14 @@
 /**
  * Plugin Name: Cron Logger
  * Description: Logs for wp-cron.php runs.
- * Version: 1.1.0
+ * Version: 1.1.1
  * Requires at least: 5.3
- * Tested up to: 5.8
+ * Tested up to: 5.8.2
  * Author: Palasthotel <rezeption@palasthotel.de> (Edward Bock)
  * Author URI: https://palasthotel.de
  * Domain Path: /languages
  * Text Domain: cron-logger
- * @copyright Copyright (c) 2017, Palasthotel
+ * @copyright Copyright (c) 2021, Palasthotel
  * @package Palasthotel\CronLogger
  */
 
@@ -23,6 +23,7 @@ require_once dirname( __FILE__ ) . "/vendor/autoload.php";
  * @property Log log
  * @property Services services
  * @property Page page
+ * @property Updates $updates
  */
 class Plugin extends Components\Plugin {
 
@@ -52,6 +53,7 @@ class Plugin extends Components\Plugin {
 
 		$this->timer    = new Timer();
 		$this->log      = new Log( $this );
+		$this->updates  = new Updates( $this );
 		$this->services = new Services( $this );
 		$this->page     = new Page( $this );
 	}

@@ -2,6 +2,12 @@
 
 namespace CronLogger;
 
+use wpdb;
+
+/**
+ * @property wpdb $wpdb
+ * @property string $table
+ */
 class Log {
 
 	private $plugin;
@@ -10,12 +16,9 @@ class Log {
 
 	public function __construct( Plugin $plugin ) {
 		$this->plugin = $plugin;
-	}
-
-	function tableName() {
 		global $wpdb;
-
-		return $wpdb->prefix . "cron_logs";
+		$this->wpdb = $wpdb;
+		$this->table = $this->wpdb->prefix . "cron_logs";
 	}
 
 	function start( $info = "" ) {
@@ -24,9 +27,8 @@ class Log {
 
 			return;
 		}
-		global $wpdb;
-		$wpdb->insert(
-			$this->tableName(),
+		$this->wpdb->insert(
+			$this->table,
 			array(
 				'executed' => $this->plugin->timer->getStart(),
 				'duration' => 0,
@@ -38,7 +40,7 @@ class Log {
 				'%s',
 			)
 		);
-		$this->log_id = $wpdb->insert_id;
+		$this->log_id = $this->wpdb->insert_id;
 	}
 
 	function update( $duration, $info = null ) {
@@ -52,10 +54,9 @@ class Log {
 			$data['info']  = $info;
 			$data_format[] = '%s';
 		}
-		global $wpdb;
 
-		return $wpdb->update(
-			$this->tablename(),
+		return $this->wpdb->update(
+			$this->table,
 			$data,
 			array(
 				'id' => $this->log_id,
@@ -68,9 +69,8 @@ class Log {
 	}
 
 	function addInfo( $message, $duration = null ) {
-		global $wpdb;
-		$result = $wpdb->insert(
-			$this->tableName(),
+		$result = $this->wpdb->insert(
+			$this->table,
 			array(
 				'parent_id' => $this->log_id,
 				'info'      => $message,
@@ -85,8 +85,8 @@ class Log {
 			)
 		);
 		if ( $result == false ) {
-			echo $wpdb->last_query;
-			$error_message  = "🚨 " . $wpdb->last_query;
+			echo $this->wpdb->last_query;
+			$error_message  = "🚨 " . $this->wpdb->last_query;
 			$this->errors[] = $error_message;
 			error_log( "Cron Logger: " . $error_message );
 		} else {
@@ -106,44 +106,41 @@ class Log {
 			),
 			$args
 		);
-		global $wpdb;
 		$count  = $args->count;
 		$page   = $args->page;
 		$offset = $count * ( $page - 1 );
 
 		$where_min_seconds = ( $args->min_seconds != null ) ? "AND duration >= " . $args->min_seconds : "";
 
-		return $wpdb->get_results(
-			"SELECT * FROM " . $this->tableName() . " WHERE parent_id IS NULL " . $where_min_seconds . " ORDER BY executed DESC LIMIT $offset, $count"
+		return $this->wpdb->get_results(
+			"SELECT * FROM " . $this->table . " WHERE parent_id IS NULL " . $where_min_seconds . " ORDER BY executed DESC LIMIT $offset, $count"
 		);
 	}
 
 	function getSublist( $log_id, $count = 50, $page = 0 ) {
-		global $wpdb;
 		$offset = $count * $page;
 
-		return $wpdb->get_results(
-			"SELECT * FROM " . $this->tableName() . " WHERE parent_id = $log_id  ORDER BY id DESC LIMIT $offset, $count"
+		return $this->wpdb->get_results(
+			"SELECT * FROM " . $this->table . " WHERE parent_id = $log_id  ORDER BY id DESC LIMIT $offset, $count"
 		);
 	}
 
 	function clean() {
-		global $wpdb;
-		$table     = $this->tableName();
+		$table     = $this->table;
 		$days      = apply_filters( Plugin::FILTER_EXPIRE, 40 );
 		$parentIds = "SELECT id FROM (" .
-		             "SELECT id FROM " . $this->tableName() . " WHERE " .
+		             "SELECT id FROM " . $this->table . " WHERE " .
 		             "parent_id IS NULL AND " .
 		             "executed < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL $days day))" .
 		             ") as parent_id";
 
-		$wpdb->query( "DELETE FROM $table WHERE parent_id IN ($parentIds)" );
-		$wpdb->query( "DELETE FROM $table WHERE id IN ($parentIds)" );
+		$this->wpdb->query( "DELETE FROM $table WHERE parent_id IN ($parentIds)" );
+		$this->wpdb->query( "DELETE FROM $table WHERE id IN ($parentIds)" );
 	}
 
 	function createTable() {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		dbDelta( "CREATE TABLE IF NOT EXISTS " . $this->tableName() . " 
+		dbDelta( "CREATE TABLE IF NOT EXISTS " . $this->table . " 
 		(
 		 id bigint(20) unsigned not null auto_increment,
 		 parent_id bigint(20) unsigned default null,
@@ -152,7 +149,8 @@ class Log {
 		 info text,
 		 primary key (id),
 		 key ( executed ),
-		 key (duration)
+		 key (duration),
+		 key (parent_id)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;" );
 	}
 }
