@@ -4,7 +4,7 @@ Donate link: http://palasthotel.de/
 Tags: tool, log, debug, cron, wp-cron
 Requires at least: 5.3
 Tested up to: 5.8.2
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl
 
@@ -27,6 +27,9 @@ Have you ever wondered what you WordPress is doing in wp-cron.php? Now you can s
 
 
 == Changelog ==
+
+= 1.2.0
+ * Optimization: Reduced history to 14 days because of performance issues
 
 = 1.1.1
  * Optimization: Performance optimization for post deletion
@@ -57,3 +60,6 @@ Have you ever wondered what you WordPress is doing in wp-cron.php? Now you can s
 
 == Arbitrary section ==
 
+== Upgrade Notice ==
+
+With version 1.2.x we reduced the retention period of the logs to 14 days. Please use the "cron_logger_expire" filter if you want to keep logs for a longer period.

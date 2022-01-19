@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Cron Logger
  * Description: Logs for wp-cron.php runs.
- * Version: 1.1.1
+ * Version: 1.2.0
  * Requires at least: 5.3
  * Tested up to: 5.8.2
  * Author: Palasthotel <rezeption@palasthotel.de> (Edward Bock)
