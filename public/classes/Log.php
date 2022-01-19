@@ -127,7 +127,7 @@ class Log {
 
 	function clean() {
 		$table     = $this->table;
-		$days      = apply_filters( Plugin::FILTER_EXPIRE, 40 );
+		$days      = apply_filters( Plugin::FILTER_EXPIRE, 14 );
 		$parentIds = "SELECT id FROM (" .
 		             "SELECT id FROM " . $this->table . " WHERE " .
 		             "parent_id IS NULL AND " .
