@@ -21,11 +21,11 @@ class Updates extends Update {
 	}
 
 	function getCurrentVersion(): int {
-		return get_option('_cron_logger_version', 0);
+		return get_option(Plugin::OPTION_VERSION, 0);
 	}
 
 	function setCurrentVersion( int $version ) {
-		update_option('_cron_logger_version', $version);
+		update_option(Plugin::OPTION_VERSION, $version);
 	}
 
 	public function update_1(){

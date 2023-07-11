@@ -18,7 +18,7 @@ class Log {
 		$this->plugin = $plugin;
 		global $wpdb;
 		$this->wpdb = $wpdb;
-		$this->table = $this->wpdb->prefix . "cron_logs";
+		$this->table = $this->wpdb->prefix . Plugin::TABLE_LOGS;
 	}
 
 	function start( $info = "" ) {
