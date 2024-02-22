@@ -1,23 +1,21 @@
 <?php
+
 namespace CronLogger\Components;
 
 use ReflectionClass;
 use ReflectionException;
 
 /**
- * @property string path
- * @property string url
- * @property string basename
- * @version 0.1.3
+ * @version 0.1.4
  */
 abstract class Plugin {
 
-	/**
-	 * @var ReflectionClass
-	 */
-	private $ref;
+	private ReflectionClass $ref;
 
-	private $tooLateForTextdomain;
+	private bool $tooLateForTextdomain;
+	public string $path;
+	public string $url;
+	public string $basename;
 
 	/**
 	 * @throws ReflectionException
@@ -35,6 +33,14 @@ abstract class Plugin {
 		register_activation_hook( $this->ref->getFileName(), array( $this, "onActivation" ) );
 		register_deactivation_hook( $this->ref->getFileName(), array( $this, "onDeactivation" ) );
 
+	}
+
+	public function getPath(string $inPluginPath): string {
+		return trailingslashit($this->path) . ltrim($inPluginPath,"/");
+	}
+
+	public function getUrl(string $inPluginUrl): string {
+		return trailingslashit($this->url) . ltrim($inPluginUrl, "/");
 	}
 
 	// -----------------------------------------------------------------------------

@@ -9,7 +9,9 @@
 namespace CronLogger;
 
 
-class Page {
+use CronLogger\Components\Component;
+
+class Page extends Component {
 
 	const ARG_ITEMS = "cron-logs-items";
 
@@ -17,8 +19,7 @@ class Page {
 
 	const ARG_DURATION_MIN = "cron-logs-dm";
 
-	public function __construct( Plugin $plugin ) {
-		$this->plugin = $plugin;
+	public function onCreate() {
 		add_action( 'admin_menu', array( $this, 'menu_pages' ) );
 	}
 
@@ -125,7 +126,7 @@ class Page {
 							$time->setTimestamp( $log->executed );
 							echo $time->format( "Y-m-d H:i:s" );
 							?></td>
-                        <td style="border-top: 3px solid #333;"><?php echo getDurationString( $log->duration ); ?></td>
+                        <td style="border-top: 3px solid #333;"><?php echo $this->getDurationString( $log->duration ); ?></td>
                         <td style="border-top: 3px solid #333;"><?php echo $log->info; ?></td>
                     </tr>
 					<?php
@@ -134,7 +135,7 @@ class Page {
 						?>
                         <tr data-parent-id="<?php echo $log->id; ?>">
                             <td></td>
-                            <td><?php echo getDurationString( $sub->duration ); ?></td>
+                            <td><?php echo $this->getDurationString( $sub->duration ); ?></td>
                             <td><?php echo $sub->info; ?></td>
                         </tr>
 						<?php
@@ -146,13 +147,13 @@ class Page {
         </div>
         <script>
             jQuery(function ($) {
-                var $logs = $('[data-log-id]');
+                const $logs = $('[data-log-id]');
                 $logs.on('click', function () {
-                    var id = $(this).attr('data-log-id');
+                    const id = $(this).attr('data-log-id');
                     console.log('clicked', id);
                     $('[data-parent-id=' + id + ']').toggle();
                 });
-                var isVisible = true;
+                let isVisible = true;
                 $('[name=toggle_logs]').on('click', function () {
                     if (isVisible) {
                         $('[data-parent-id]').hide();
@@ -167,12 +168,13 @@ class Page {
 
 	}
 
-}
+	private function getDurationString($duration ): string {
+		if ( $duration == null ) {
+			return "";
+		}
 
-function getDurationString( $duration ) {
-	if ( $duration == null ) {
-		return "";
+		return $duration . "s";
 	}
 
-	return $duration . "s";
 }
+

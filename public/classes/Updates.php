@@ -4,10 +4,9 @@ namespace CronLogger;
 
 use CronLogger\Components\Update;
 
-/**
- * @property Plugin $plugin
- */
 class Updates extends Update {
+
+	private Plugin $plugin;
 
 	public function __construct(Plugin $plugin) {
 		$this->plugin = $plugin;
@@ -29,8 +28,9 @@ class Updates extends Update {
 	}
 
 	public function update_1(){
+		global $wpdb;
 		$table = $this->plugin->log->table;
-		$this->plugin->log->wpdb->query(
+		$wpdb->query(
 			"ALTER TABLE $table ADD KEY (parent_id)"
 		);
 	}

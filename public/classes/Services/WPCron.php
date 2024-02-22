@@ -3,16 +3,15 @@
 namespace CronLogger\Services;
 
 
+use CronLogger\Components\Component;
 use CronLogger\Plugin;
+use WP_Post;
 
-class WPCron {
+class WPCron extends Component {
 
-	var $times = array();
+	private array $times = array();
 
-	public function __construct( Plugin $plugin ) {
-
-		$this->log   = $plugin->log;
-		$this->timer = $plugin->timer;
+	public function onCreate(): void {
 
 		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
 			add_action( "plugins_loaded", array( $this, "start" ) );
@@ -24,19 +23,19 @@ class WPCron {
 		}
 	}
 
-	function start() {
+	function start(): void {
 		do_action( Plugin::ACTION_WP_CRON_START );
-		$this->log->start( "wp-cron.php" );
+		$this->plugin->log->start( "wp-cron.php" );
 		$this->addCronActions();
 	}
 
-	function shutdown() {
-		$this->log->update( $this->timer->getDuration(), 'Done wp-cron.php 🎉 ' );
+	function shutdown(): void {
+		$this->plugin->log->update( $this->plugin->timer->getDuration(), 'Done wp-cron.php 🎉 ' );
 		do_action( Plugin::ACTION_WP_CRON_FINISH );
-		$this->log->clean();
+		$this->plugin->log->clean();
 	}
 
-	function addCronActions() {
+	function addCronActions(): void {
 		$crons      = _get_cron_array();
 		$registered = array();
 
@@ -52,16 +51,16 @@ class WPCron {
 		if ( count( $registered ) > 0 ) {
 			$msg = sprintf( __( "Registered hooks: %s", Plugin::DOMAIN ), implode( ', ', $registered ) );
 		}
-		$this->log->addInfo( $msg );
+		$this->plugin->log->addInfo( $msg );
 	}
 
-	function before_execute_cron_hook() {
+	function before_execute_cron_hook(): void {
 		$this->times[ current_filter() ] = time();
-		$this->log->addInfo( "Starts " . current_filter() );
+		$this->plugin->log->addInfo( "Starts " . current_filter() );
 	}
 
-	function after_execute_cron_hook() {
-		$this->log->addInfo( "Finished " . current_filter(), time() - $this->times[ current_filter() ] );
+	function after_execute_cron_hook(): void {
+		$this->plugin->log->addInfo( "Finished " . current_filter(), time() - $this->times[ current_filter() ] );
 	}
 
 	/**
@@ -69,8 +68,8 @@ class WPCron {
 	 *
 	 * @param int $post_id
 	 */
-	public function publish_future_post_start( $post_id ) {
-		$this->log->addInfo( "Check post -> $post_id" );
+	public function publish_future_post_start( $post_id ): void {
+		$this->plugin->log->addInfo( "Check post -> $post_id" );
 		add_action( 'transition_post_status', array( $this, 'transition_post_status' ), 10, 3 );
 	}
 
@@ -79,7 +78,7 @@ class WPCron {
 	 *
 	 * @param $post
 	 */
-	public function publish_future_post_finish( $post ) {
+	public function publish_future_post_finish( $post ): void {
 		remove_action( 'transition_post_status', array( $this, 'transition_post_status' ), 10 );
 	}
 
@@ -88,10 +87,10 @@ class WPCron {
 	 *
 	 * @param string $new_status
 	 * @param string $old_status
-	 * @param \WP_Post $post
+	 * @param WP_Post $post
 	 */
-	function transition_post_status( $new_status, $old_status, $post ) {
-		$this->log->addInfo(
+	function transition_post_status( $new_status, $old_status, $post ): void {
+		$this->plugin->log->addInfo(
 			"Status changed from <b>$old_status</b> -> <b>$new_status</b> of '{$post->post_title}'"
 		);
 	}

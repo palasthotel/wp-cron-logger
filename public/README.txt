@@ -3,8 +3,9 @@ Contributors: edwardbock, palasthotel
 Donate link: http://palasthotel.de/
 Tags: tool, log, debug, cron, wp-cron
 Requires at least: 5.3
-Tested up to: 6.2.2
+Tested up to: 6.4.3
 Stable tag: 1.2.1
+Requires PHP: 8.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl
 
@@ -27,6 +28,9 @@ Have you ever wondered what you WordPress is doing in wp-cron.php? Now you can s
 
 
 == Changelog ==
+
+= 1.2.2
+ * Fix: PHP 8.2 warnings
 
 = 1.2.1
  * Optimization: Delete all data in the database on plugin deletion

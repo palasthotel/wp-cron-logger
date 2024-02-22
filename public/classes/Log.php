@@ -2,26 +2,19 @@
 
 namespace CronLogger;
 
-use wpdb;
+use CronLogger\Components\Database;
 
-/**
- * @property wpdb $wpdb
- * @property string $table
- */
-class Log {
+class Log  extends Database {
 
-	private $plugin;
 	private $log_id = null;
-	private $errors = array();
+	public $errors = array();
+	public string $table;
 
-	public function __construct( Plugin $plugin ) {
-		$this->plugin = $plugin;
-		global $wpdb;
-		$this->wpdb = $wpdb;
+	public function init() {
 		$this->table = $this->wpdb->prefix . Plugin::TABLE_LOGS;
 	}
 
-	function start( $info = "" ) {
+	function start( $info = "" ): void {
 		if ( $this->log_id != null ) {
 			error_log( "Only start logger once per session.", 4 );
 
@@ -30,7 +23,7 @@ class Log {
 		$this->wpdb->insert(
 			$this->table,
 			array(
-				'executed' => $this->plugin->timer->getStart(),
+				'executed' => Plugin::instance()->timer->getStart(),
 				'duration' => 0,
 				'info'     => "Running ⏳ $info",
 			),
@@ -43,7 +36,7 @@ class Log {
 		$this->log_id = $this->wpdb->insert_id;
 	}
 
-	function update( $duration, $info = null ) {
+	function update( $duration, $info = null ): int {
 
 		if ( $this->log_id == null ) {
 			$this->start();
@@ -68,7 +61,7 @@ class Log {
 		);
 	}
 
-	function addInfo( $message, $duration = null ) {
+	function addInfo( $message, $duration = null ): void {
 		$result = $this->wpdb->insert(
 			$this->table,
 			array(
@@ -91,13 +84,13 @@ class Log {
 			error_log( "Cron Logger: " . $error_message );
 		} else {
 			$this->update(
-				$this->plugin->timer->getDuration()
+				Plugin::instance()->timer->getDuration()
 			);
 		}
 
 	}
 
-	function getList( $args = array() ) {
+	function getList( $args = array() ): array {
 		$args = (object) array_merge(
 			array(
 				"count"       => 15,
@@ -117,7 +110,7 @@ class Log {
 		);
 	}
 
-	function getSublist( $log_id, $count = 50, $page = 0 ) {
+	function getSublist( $log_id, $count = 50, $page = 0 ): array {
 		$offset = $count * $page;
 
 		return $this->wpdb->get_results(
@@ -125,7 +118,7 @@ class Log {
 		);
 	}
 
-	function clean() {
+	function clean(): void {
 		$table     = $this->table;
 		$days      = apply_filters( Plugin::FILTER_EXPIRE, 14 );
 		$parentIds = "SELECT id FROM (" .
@@ -138,8 +131,8 @@ class Log {
 		$this->wpdb->query( "DELETE FROM $table WHERE id IN ($parentIds)" );
 	}
 
-	function createTable() {
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	function createTables() {
+		parent::createTables();
 		dbDelta( "CREATE TABLE IF NOT EXISTS " . $this->table . " 
 		(
 		 id bigint(20) unsigned not null auto_increment,

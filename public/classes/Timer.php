@@ -5,17 +5,17 @@ namespace CronLogger;
 
 class Timer {
 
-	private $start;
+	private int $start;
 
 	public function __construct() {
 		$this->start = time();
 	}
 
-	function getStart() {
+	function getStart(): int {
 		return $this->start;
 	}
 
-	function getDuration() {
+	function getDuration(): int {
 		return time() - $this->start;
 	}
 

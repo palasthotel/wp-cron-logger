@@ -2,14 +2,15 @@
 /**
  * Plugin Name: Cron Logger
  * Description: Logs for wp-cron.php runs.
- * Version: 1.2.1
+ * Version: 1.2.2
  * Requires at least: 5.3
- * Tested up to: 6.2.2
+ * Tested up to: 6.4.3
  * Author: Palasthotel <rezeption@palasthotel.de> (Edward Bock)
  * Author URI: https://palasthotel.de
  * Domain Path: /languages
  * Text Domain: cron-logger
- * @copyright Copyright (c) 2023, Palasthotel
+ * Requires PHP: 8.0
+ * @copyright Palasthotel
  * @package Palasthotel\CronLogger
  */
 
@@ -17,14 +18,6 @@ namespace CronLogger;
 
 require_once dirname( __FILE__ ) . "/vendor/autoload.php";
 
-
-/**
- * @property Timer timer
- * @property Log log
- * @property Services services
- * @property Page page
- * @property Updates $updates
- */
 class Plugin extends Components\Plugin {
 
 	/**
@@ -43,10 +36,14 @@ class Plugin extends Components\Plugin {
 
 	const TABLE_LOGS = "cron_logs";
 	const OPTION_VERSION = "_cron_logger_version";
+
+	public Timer $timer;
+	public Log $log;
+
 	/**
 	 * Plugin constructor
 	 */
-	function onCreate() {
+	function onCreate(): void {
 
 		$this->loadTextdomain(
 			Plugin::DOMAIN,
@@ -55,16 +52,16 @@ class Plugin extends Components\Plugin {
 
 		$this->timer    = new Timer();
 		$this->log      = new Log( $this );
-		$this->updates  = new Updates( $this );
-		$this->services = new Services( $this );
-		$this->page     = new Page( $this );
+		new Updates( $this );
+		new Services( $this );
+		new Page( $this );
 	}
 
 	/**
 	 * on activation
 	 */
-	function onSiteActivation() {
-		$this->log->createTable();
+	function onSiteActivation(): void {
+		$this->log->createTables();
 	}
 }
 
