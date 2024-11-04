@@ -120,7 +120,7 @@ class Log  extends Database {
 
 	function clean(): void {
 		$table     = $this->table;
-		$days      = apply_filters( Plugin::FILTER_EXPIRE, 14 );
+		$days      = apply_filters( Plugin::FILTER_EXPIRE, 30 );
 		$parentIds = "SELECT id FROM (" .
 		             "SELECT id FROM " . $this->table . " WHERE " .
 		             "parent_id IS NULL AND " .
