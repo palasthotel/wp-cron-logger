@@ -3,9 +3,9 @@ Contributors: edwardbock, palasthotel
 Donate link: http://palasthotel.de/
 Tags: tool, log, debug, cron, wp-cron
 Requires at least: 5.3
-Tested up to: 6.5.0
-Stable tag: 1.2.2
-Requires PHP: 8.0
+Tested up to: 6.6.2
+Stable tag: 1.3.0
+Requires PHP: 8.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl
 
@@ -28,6 +28,10 @@ Have you ever wondered what you WordPress is doing in wp-cron.php? Now you can s
 
 
 == Changelog ==
+
+= 1.3.0
+* Feature: Database cleanup cron and cleanup button
+* Feature: Automatically purge logs after 30 day. Can be modified via filter.
 
 = 1.2.2
  * Fix: PHP 8.2 warnings

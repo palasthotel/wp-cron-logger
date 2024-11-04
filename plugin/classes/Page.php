@@ -19,11 +19,11 @@ class Page extends Component {
 
 	const ARG_DURATION_MIN = "cron-logs-dm";
 
-	public function onCreate() {
+	public function onCreate(): void {
 		add_action( 'admin_menu', array( $this, 'menu_pages' ) );
 	}
 
-	public function menu_pages() {
+	public function menu_pages(): void {
 		add_submenu_page(
 			'tools.php',
 			__( 'Cron Logs', Plugin::DOMAIN ),
@@ -98,7 +98,10 @@ class Page extends Component {
 				?>
             </form>
 
-			<?php submit_button( __( 'Toggle open/close log details', Plugin::DOMAIN ), 'small', "toggle_logs" ); ?>
+            <div style="display: flex; gap: 25px;">
+                <?php submit_button( __( 'Toggle open/close log details', Plugin::DOMAIN ), 'small', "toggle_logs" ); ?>
+                <p class="submit"><button class="button button-small button-link-delete" id="cron-logger-cleanup">Cleanup</button></p>
+            </div>
 
             <table class="widefat striped">
                 <thead>
@@ -163,6 +166,16 @@ class Page extends Component {
                     isVisible = !isVisible;
                 });
             });
+            const cleanupButton = document.getElementById("cron-logger-cleanup");
+            cleanupButton.addEventListener("click", function(e){
+                e.preventDefault();
+                cleanupButton.removeEventListener("click", this);
+                cleanupButton.innerHTML = "<span class='spinner is-active'></span>";
+                fetch("/wp-admin/admin-ajax.php?action=cron_logger_cleanup")
+                    .then(() => {
+                        window.location.reload();
+                    });
+            })
         </script>
 		<?php
 
