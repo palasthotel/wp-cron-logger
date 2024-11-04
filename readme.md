@@ -23,3 +23,12 @@ function my_plugin_init_logger($logger){
 }
 add_action("cron_logger_init", "my_plugin_init_logger");
 ```
+
+## Custom log expiration time
+
+```php
+function my_plugin_cron_logger_expire(int $days){
+	return 60; // logs will expire and cleaned up after 60 days
+}
+add_filter("cron_logger_expire", "my_plugin_cron_logger_expire");
+```
