@@ -37,6 +37,8 @@ class Plugin extends Components\Plugin {
 	const TABLE_LOGS = "cron_logs";
 	const OPTION_VERSION = "_cron_logger_version";
 
+	const SCHEDULE = "cron_logger";
+
 	public Timer $timer;
 	public Log $log;
 
@@ -51,10 +53,11 @@ class Plugin extends Components\Plugin {
 		);
 
 		$this->timer    = new Timer();
-		$this->log      = new Log( $this );
+		$this->log      = new Log();
 		new Updates( $this );
 		new Services( $this );
 		new Page( $this );
+		new Schedule($this);
 	}
 
 	/**
