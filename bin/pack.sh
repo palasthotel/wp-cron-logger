@@ -10,7 +10,7 @@ rm -rf "$BUILD_PATH"
 mkdir -p "$DEST_PATH"
 
 echo "Syncing files..."
-rsync -rL "$PROJECT_PATH/public/" "$DEST_PATH/"
+rsync -rL "$PROJECT_PATH/plugin/" "$DEST_PATH/"
 
 echo "Cleanup files..."
 cd "$DEST_PATH"

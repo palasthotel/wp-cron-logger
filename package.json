@@ -1,0 +1,22 @@
+{
+	"name": "@palasthotel/cron-logger",
+	"version": "1.0.0",
+	"description": "",
+	"license": "MIT",
+	"author": {
+		"name": "Edward Bock",
+		"email": "edward.bock@palasthotel.de",
+		"url": "https://palasthotel.de"
+	},
+	"scripts": {
+		"pack": "./bin/pack.sh",
+		"wp-env": "wp-env"
+	},
+	"devDependencies": {
+		"@wordpress/env": "^10.11.0"
+	},
+	"engines": {
+		"node": ">=22",
+		"pnpm": ">=9"
+	}
+}

@@ -12,7 +12,7 @@
  */
 
 
-include dirname( __FILE__ ) . "/public/plugin.php";
+include dirname(__FILE__) . "/plugin/plugin.php";
 
 use CronLogger\Plugin;
 
