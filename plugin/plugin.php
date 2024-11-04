@@ -58,6 +58,7 @@ class Plugin extends Components\Plugin {
 		new Services( $this );
 		new Page( $this );
 		new Schedule($this);
+		new Ajax($this);
 	}
 
 	/**

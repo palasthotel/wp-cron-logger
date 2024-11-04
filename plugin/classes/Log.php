@@ -10,7 +10,7 @@ class Log  extends Database {
 	public $errors = array();
 	public string $table;
 
-	public function init() {
+	public function init(): void {
 		$this->table = $this->wpdb->prefix . Plugin::TABLE_LOGS;
 	}
 
