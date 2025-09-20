@@ -121,14 +121,17 @@ class Log  extends Database {
 	function clean(): void {
 		$table     = $this->table;
 		$days      = apply_filters( Plugin::FILTER_EXPIRE, 30 );
-		$parentIds = "SELECT id FROM (" .
+		$expiredParentIds = "SELECT id FROM (" .
 		             "SELECT id FROM " . $this->table . " WHERE " .
 		             "parent_id IS NULL AND " .
 		             "executed < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL $days day))" .
 		             ") as parent_id";
 
-		$this->wpdb->query( "DELETE FROM $table WHERE parent_id IN ($parentIds)" );
-		$this->wpdb->query( "DELETE FROM $table WHERE id IN ($parentIds)" );
+		$childIdsWithoutParent = "SELECT id FROM " . $this->table . " WHERE parent_id NOT IN ( ".
+			"SELECT id FROM " . $this->table . " WHERE parent_id IS NULL ) AND parent_id IS NOT NULL";
+
+		$this->wpdb->query( "DELETE FROM $table WHERE parent_id IN ($expiredParentIds)" );
+		$this->wpdb->query( "DELETE FROM $table WHERE id IN ($childIdsWithoutParent)" );
 	}
 
 	function createTables() {
