@@ -125,10 +125,12 @@ class Log  extends Database {
 		             "SELECT id FROM " . $this->table . " WHERE " .
 		             "parent_id IS NULL AND " .
 		             "executed < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL $days day))" .
-		             ") as parent_id";
+		             ") as expired_parents";
 
-		$childIdsWithoutParent = "SELECT id FROM " . $this->table . " WHERE parent_id NOT IN ( ".
-			"SELECT id FROM " . $this->table . " WHERE parent_id IS NULL ) AND parent_id IS NOT NULL";
+		$childIdsWithoutParent = "SELECT id FROM (" .
+            "SELECT id FROM " . $this->table . " WHERE parent_id NOT IN ( ".
+			"SELECT id FROM " . $this->table . " WHERE parent_id IS NULL ) AND parent_id IS NOT NULL" .
+            ") as orphained_children";
 
 		$this->wpdb->query( "DELETE FROM $table WHERE parent_id IN ($expiredParentIds)" );
 		$this->wpdb->query( "DELETE FROM $table WHERE id IN ($childIdsWithoutParent)" );
