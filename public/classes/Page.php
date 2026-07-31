@@ -130,7 +130,7 @@ class Page extends Component {
 							echo esc_html( $time->format( "Y-m-d H:i:s" ) );
 							?></td>
                         <td style="border-top: 3px solid #333;"><?php echo esc_html( $this->getDurationString( $log->duration ) ); ?></td>
-                        <td style="border-top: 3px solid #333;"><?php echo esc_html( $log->info ); ?></td>
+                        <td style="border-top: 3px solid #333;"><?php echo wp_kses_post( $log->info ); ?></td>
                     </tr>
 					<?php
 					$sublist = $this->plugin->log->getSublist( $log->id );
@@ -139,7 +139,7 @@ class Page extends Component {
                         <tr data-parent-id="<?php echo esc_attr( $log->id ); ?>">
                             <td></td>
                             <td><?php echo esc_html( $this->getDurationString( $sub->duration ) ); ?></td>
-                            <td><?php echo esc_html( $sub->info ); ?></td>
+                            <td><?php echo wp_kses_post( $sub->info ); ?></td>
                         </tr>
 						<?php
 					}

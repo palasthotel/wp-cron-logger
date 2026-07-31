@@ -41,8 +41,8 @@ class WPCron extends Component {
 
 		foreach ( $crons as $timestamp => $cronhooks ) {
 			foreach ( $cronhooks as $hook => $keys ) {
-				add_action( $hook, array( $this, "before_execute_cron_hook" ), 0 );
-				add_action( $hook, array( $this, "after_execute_cron_hook" ), 999 );
+				add_action( $hook, array( $this, "before_execute_cron_hook" ), 0, 0 );
+				add_action( $hook, array( $this, "after_execute_cron_hook" ), 999, 0 );
 				$registered[] = $hook;
 			}
 		}
