@@ -7,8 +7,8 @@ use CronLogger\Components\Component;
 class SolrPlugin extends Component {
 
 	public function onCreate(): void {
-		add_action( "solr_cron_start", array( $this, "onStart" ) );
-		add_action( "solr_cron_finish", array( $this, "onFinish" ) );
+		add_action( "solr_cron_start", array( $this, "onStart" ), 10, 0 );
+		add_action( "solr_cron_finish", array( $this, "onFinish" ), 10, 0 );
 	}
 
 	function onStart(): void {
