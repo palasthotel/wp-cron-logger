@@ -2,7 +2,6 @@
 
 namespace CronLogger\Services;
 
-
 use CronLogger\Components\Component;
 
 class SolrPlugin extends Component {
