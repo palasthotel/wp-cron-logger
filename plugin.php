@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name:       Cron Logger - DEV
  * Description:       Dev inc file
@@ -8,11 +7,11 @@
  * Tested up to:      X.X.X
  * Author:            PALASTHOTEL by Edward
  * Author URI:        http://www.palasthotel.de
- * Domain Path:       /plugin/languages
+ * Domain Path:       /public/languages
  */
 
 
-include dirname(__FILE__) . "/plugin/plugin.php";
+include dirname(__FILE__) . "/public/plugin.php";
 
 use CronLogger\Plugin;
 
