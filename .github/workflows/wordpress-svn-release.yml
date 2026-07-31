@@ -1,0 +1,105 @@
+---
+name: Build and release to WordPress.org
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build and deploy to WordPress.org
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ github.ref_name }}
+    steps:
+      - name: Notify on start
+        run: |
+          echo "🤖 Starting release process for tag $RELEASE_TAG…"
+          echo "🤖 This may take a few minutes. Please wait."
+
+      - name: Normalize release tag
+        shell: bash
+        run: |
+          VERSION=${RELEASE_TAG#v}
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Show release version
+        run: echo "VERSION=${VERSION}"
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Check version numbers
+        run: bash bin/version-checker.sh
+
+      - name: Install SVN
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y subversion
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.1"
+          tools: composer
+
+      - name: Pack plugin
+        id: pack_plugin
+        run: npm run pack
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v2
+        continue-on-error: true
+        with:
+          files: ./cron-logger.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cleanup packaged artifact
+        if: always()
+        run: rm -f ./cron-logger.zip
+
+      - name: Checkout WordPress SVN repository
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        run: svn checkout "${{ vars.SVN_REPO_URL }}" svn --username "$SVN_USERNAME" --password "$SVN_PASSWORD" --no-auth-cache --non-interactive --trust-server-cert
+
+      - name: Prepare SVN & commit
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        run: |
+          ls -la
+          cd svn
+          ls -la
+          VERSION=${VERSION}
+          rm -rf trunk/* tags/$VERSION || true
+          mkdir -p trunk tags/$VERSION
+          cp -r ../public/* trunk/
+          cp -r trunk/* tags/$VERSION/
+          svn add --force . || true
+          svn status | awk '/^!/{print $2}' | while IFS= read -r file; do
+            [ -n "$file" ] || continue
+            svn rm "$file" || true
+          done
+          svn status
+          svn commit -m "Release version $VERSION" --username "$SVN_USERNAME" --password "$SVN_PASSWORD" --no-auth-cache --non-interactive --trust-server-cert
+
+      - name: Cleanup SVN checkout
+        if: always()
+        run: rm -rf svn
+
+      - name: Notify on success
+        if: success()
+        run: |
+          echo "🤖 Plugin with Version ${RELEASE_TAG} successfully deployed to WordPress.org! 🚀"
