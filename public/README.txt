@@ -1,13 +1,13 @@
 === Cron Logger ===
-Contributors: edwardbock, palasthotel
+Contributors: edwardbock, palasthotel, janaeggebrecht
 Donate link: http://palasthotel.de/
 Tags: tool, log, debug, cron, wp-cron
 Requires at least: 5.3
-Tested up to: 6.6.2
-Stable tag: 1.3.0
+Tested up to: 6.8.2
+Stable tag: 1.3.3
 Requires PHP: 8.1
-License: GPLv3
-License URI: http://www.gnu.org/licenses/gpl
+License: GPL-3.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 Logs wp-cron.php runs.
 
@@ -29,29 +29,38 @@ Have you ever wondered what you WordPress is doing in wp-cron.php? Now you can s
 
 == Changelog ==
 
-= 1.3.0
+= 1.3.3 =
+* Fix: Database error while deleting orphaned child logs
+
+= 1.3.2 =
+* Fix: Version number in the plugin header
+
+= 1.3.1 =
+* Feature: Cleanup also removes child logs whose parent no longer exists
+
+= 1.3.0 =
 * Feature: Database cleanup cron and cleanup button
 * Feature: Automatically purge logs after 30 day. Can be modified via filter.
 
-= 1.2.2
+= 1.2.2 =
  * Fix: PHP 8.2 warnings
 
-= 1.2.1
+= 1.2.1 =
  * Optimization: Delete all data in the database on plugin deletion
 
-= 1.2.0
+= 1.2.0 =
  * Optimization: Reduced history to 14 days because of performance issues
 
-= 1.1.1
+= 1.1.1 =
  * Optimization: Performance optimization for post deletion
 
-= 1.1.0
+= 1.1.0 =
  * Refactoring: Code cleanup
 
-= 1.0.5
+= 1.0.5 =
  * Fix: missing sanitization fix thanks community member report.
 
-= 1.0.4
+= 1.0.4 =
  * Optimization: Multisite plugin activation (Thanks to @jcleaveland for report)
  * Optimization: use wp_timezone_string function (Thanks to @pothi for report)
 
