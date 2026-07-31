@@ -57,8 +57,8 @@ class Page extends Component {
 
 	function render() {
 		?>
-        <div class="wrap">
-            <h2>Cron Logs</h2>
+		<div class="wrap">
+			<h2>Cron Logs</h2>
 			<?php
 			$timezone = wp_timezone_string();
 			try {
@@ -70,51 +70,51 @@ class Page extends Component {
 			$args = $this->getArgs();
 			?>
 
-            <form method="GET" action="<?php echo admin_url( 'tools.php' ); ?>">
-                <input type="hidden" name="page" value="cron-logs"/>
-                <label>
+			<form method="GET" action="<?php echo admin_url( 'tools.php' ); ?>">
+				<input type="hidden" name="page" value="cron-logs"/>
+				<label>
 					<?php _e( 'Minimum duration of x seconds', Plugin::DOMAIN ); ?><br>
-                    <input type="number"
-                           name="<?php echo self::ARG_DURATION_MIN ?>"
-                           placeholder="x"
-                           value="<?php echo $args->duration_min; ?>"/>
-                </label><br>
-                <label>
+					<input type="number"
+						   name="<?php echo self::ARG_DURATION_MIN ?>"
+						   placeholder="x"
+						   value="<?php echo $args->duration_min; ?>"/>
+				</label><br>
+				<label>
 					<?php _e( "Page", Plugin::DOMAIN ); ?><br>
-                    <input type="number" min="1"
-                           name="<?php echo self::ARG_PAGE ?>" required
-                           value="<?php echo $args->page; ?>"/>
-                </label><br>
-                <label>
+					<input type="number" min="1"
+						   name="<?php echo self::ARG_PAGE ?>" required
+						   value="<?php echo $args->page; ?>"/>
+				</label><br>
+				<label>
 					<?php _e( 'Logs per Page', Plugin::DOMAIN ); ?><br>
-                    <input type="number" min="1" max="50" maxlength="2"
-                           name="<?php echo self::ARG_ITEMS ?>"
-                           required
-                           value="<?php echo $args->items; ?>"/>
-                </label>
+					<input type="number" min="1" max="50" maxlength="2"
+						   name="<?php echo self::ARG_ITEMS ?>"
+						   required
+						   value="<?php echo $args->items; ?>"/>
+				</label>
 
 				<?php
 				submit_button( __( "Filter", Plugin::DOMAIN ) );
 				?>
-            </form>
+			</form>
 
-            <div style="display: flex; gap: 25px;">
-                <?php submit_button( __( 'Toggle open/close log details', Plugin::DOMAIN ), 'small', "toggle_logs" ); ?>
-                <p class="submit"><button class="button button-small button-link-delete" id="cron-logger-cleanup">Cleanup</button></p>
-            </div>
+			<div style="display: flex; gap: 25px;">
+				<?php submit_button( __( 'Toggle open/close log details', Plugin::DOMAIN ), 'small', "toggle_logs" ); ?>
+				<p class="submit"><button class="button button-small button-link-delete" id="cron-logger-cleanup">Cleanup</button></p>
+			</div>
 
-            <table class="widefat striped">
-                <thead>
-                <tr>
-                    <th style="width: 145px;" scope="col"
-                        title="<?php echo $timezone; ?>">
+			<table class="widefat striped">
+				<thead>
+				<tr>
+					<th style="width: 145px;" scope="col"
+						title="<?php echo $timezone; ?>">
 						<?php _e( 'Executed', Plugin::DOMAIN ); ?>
-                    </th>
-                    <th style="width: 90px;" scope="col"><?php _e( 'Duration', Plugin::DOMAIN ); ?></th>
-                    <th scope="col"><?php _e( 'Info', Plugin::DOMAIN ); ?></th>
-                </tr>
-                </thead>
-                <tbody>
+					</th>
+					<th style="width: 90px;" scope="col"><?php _e( 'Duration', Plugin::DOMAIN ); ?></th>
+					<th scope="col"><?php _e( 'Info', Plugin::DOMAIN ); ?></th>
+				</tr>
+				</thead>
+				<tbody>
 				<?php
 				$list = $this->plugin->log->getList( array(
 					"count"       => $args->items,
@@ -123,55 +123,55 @@ class Page extends Component {
 				) );
 				foreach ( $list as $log ) {
 					?>
-                    <tr style="cursor: pointer"
-                        data-log-id="<?php echo $log->id; ?>">
-                        <td style="border-top: 3px solid #333;"><?php
+					<tr style="cursor: pointer"
+						data-log-id="<?php echo $log->id; ?>">
+						<td style="border-top: 3px solid #333;"><?php
 							$time->setTimestamp( $log->executed );
 							echo $time->format( "Y-m-d H:i:s" );
 							?></td>
-                        <td style="border-top: 3px solid #333;"><?php echo $this->getDurationString( $log->duration ); ?></td>
-                        <td style="border-top: 3px solid #333;"><?php echo $log->info; ?></td>
-                    </tr>
+						<td style="border-top: 3px solid #333;"><?php echo $this->getDurationString( $log->duration ); ?></td>
+						<td style="border-top: 3px solid #333;"><?php echo $log->info; ?></td>
+					</tr>
 					<?php
 					$sublist = $this->plugin->log->getSublist( $log->id );
 					foreach ( $sublist as $sub ) {
 						?>
-                        <tr data-parent-id="<?php echo $log->id; ?>">
-                            <td></td>
-                            <td><?php echo $this->getDurationString( $sub->duration ); ?></td>
-                            <td><?php echo $sub->info; ?></td>
-                        </tr>
+						<tr data-parent-id="<?php echo $log->id; ?>">
+							<td></td>
+							<td><?php echo $this->getDurationString( $sub->duration ); ?></td>
+							<td><?php echo $sub->info; ?></td>
+						</tr>
 						<?php
 					}
 				}
 				?>
-                </tbody>
-            </table>
-        </div>
-        <script>
-            jQuery(function ($) {
-                const $logs = $('[data-log-id]');
-                $logs.on('click', function () {
-                    const id = $(this).attr('data-log-id');
-                    console.log('clicked', id);
-                    $('[data-parent-id=' + id + ']').toggle();
-                });
-                let isVisible = true;
-                $('[name=toggle_logs]').on('click', function () {
-                    if (isVisible) {
-                        $('[data-parent-id]').hide();
-                    } else {
-                        $('[data-log-id]').trigger('click');
-                    }
-                    isVisible = !isVisible;
-                });
-            });
-            const cleanupButton = document.getElementById("cron-logger-cleanup");
+				</tbody>
+			</table>
+		</div>
+		<script>
+			jQuery(function ($) {
+				const $logs = $('[data-log-id]');
+				$logs.on('click', function () {
+					const id = $(this).attr('data-log-id');
+					console.log('clicked', id);
+					$('[data-parent-id=' + id + ']').toggle();
+				});
+				let isVisible = true;
+				$('[name=toggle_logs]').on('click', function () {
+					if (isVisible) {
+						$('[data-parent-id]').hide();
+					} else {
+						$('[data-log-id]').trigger('click');
+					}
+					isVisible = !isVisible;
+				});
+			});
+			const cleanupButton = document.getElementById("cron-logger-cleanup");
 			const cleanupNonce = <?php echo wp_json_encode( wp_create_nonce( Ajax::CLEANUP_NONCE_ACTION ) ); ?>;
-            cleanupButton.addEventListener("click", function(e){
-                e.preventDefault();
-                cleanupButton.removeEventListener("click", this);
-                cleanupButton.innerHTML = "<span class='spinner is-active'></span>";
+			cleanupButton.addEventListener("click", function(e){
+				e.preventDefault();
+				cleanupButton.removeEventListener("click", this);
+				cleanupButton.innerHTML = "<span class='spinner is-active'></span>";
 				fetch("<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>", {
 					method: "POST",
 					headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
@@ -180,11 +180,11 @@ class Page extends Component {
 						nonce: cleanupNonce
 					})
 				})
-                    .then(() => {
-                        window.location.reload();
-                    });
-            })
-        </script>
+					.then(() => {
+						window.location.reload();
+					});
+			})
+		</script>
 		<?php
 
 	}

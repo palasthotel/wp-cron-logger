@@ -4,7 +4,7 @@ namespace CronLogger;
 
 use CronLogger\Components\Database;
 
-class Log  extends Database {
+class Log extends Database {
 
 	private $log_id = null;
 	public $errors = array();
@@ -114,7 +114,7 @@ class Log  extends Database {
 		$offset = $count * $page;
 
 		return $this->wpdb->get_results(
-			"SELECT * FROM " . $this->table . " WHERE parent_id = $log_id  ORDER BY id DESC LIMIT $offset, $count"
+			"SELECT * FROM " . $this->table . " WHERE parent_id = $log_id ORDER BY id DESC LIMIT $offset, $count"
 		);
 	}
 
@@ -122,15 +122,15 @@ class Log  extends Database {
 		$table     = $this->table;
 		$days      = apply_filters( Plugin::FILTER_EXPIRE, 30 );
 		$expiredParentIds = "SELECT id FROM (" .
-		             "SELECT id FROM " . $this->table . " WHERE " .
-		             "parent_id IS NULL AND " .
-		             "executed < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL $days day))" .
-		             ") as expired_parents";
+					 "SELECT id FROM " . $this->table . " WHERE " .
+					 "parent_id IS NULL AND " .
+					 "executed < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL $days day))" .
+					 ") as expired_parents";
 
 		$childIdsWithoutParent = "SELECT id FROM (" .
-            "SELECT id FROM " . $this->table . " WHERE parent_id NOT IN ( ".
+			"SELECT id FROM " . $this->table . " WHERE parent_id NOT IN ( ".
 			"SELECT id FROM " . $this->table . " WHERE parent_id IS NULL ) AND parent_id IS NOT NULL" .
-            ") as orphained_children";
+			") as orphained_children";
 
 		$this->wpdb->query( "DELETE FROM $table WHERE parent_id IN ($expiredParentIds)" );
 		$this->wpdb->query( "DELETE FROM $table WHERE id IN ($childIdsWithoutParent)" );
