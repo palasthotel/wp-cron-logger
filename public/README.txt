@@ -4,7 +4,7 @@ Donate link: http://palasthotel.de/
 Tags: tool, log, debug, cron, wp-cron
 Requires at least: 5.3
 Tested up to: 6.8.2
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 Requires PHP: 8.1
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -28,6 +28,14 @@ Have you ever wondered what you WordPress is doing in wp-cron.php? Now you can s
 
 
 == Changelog ==
+
+= 1.3.4 =
+**Bug Fixes**
+* bind the values interpolated into the log queries (85ad8b4)
+* deliver the orphaned child log cleanup and its database error fix (758a81f)
+* escape the log page output (fc68ebb)
+* release (ab71f59)
+* restrict the log cleanup endpoint to administrators (CVE-2025-53266, reported by Nguyen Xuan Chien, fix by Quentin Lienhardt) (1ec1272)
 
 = 1.3.3 =
 * Fix: Database error while deleting orphaned child logs
