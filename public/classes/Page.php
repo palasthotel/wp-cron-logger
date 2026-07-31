@@ -58,39 +58,39 @@ class Page extends Component {
 	function render() {
 		?>
         <div class="wrap">
-            <h2>Cron Logs</h2>
+            <h2><?php esc_html_e( 'Cron Logs', 'cron-logger' ); ?></h2>
 			<?php
 			$timezone = wp_timezone_string();
 			try {
 				$time = new \DateTime( "now", new \DateTimeZone( $timezone ) );
 			} catch ( \Exception $e ) {
-				echo "<p>" . __( "Missing »timezone_string« entry in options table. Please fix! Otherwise execution times could be wrong.", Plugin::DOMAIN ) . "</p>";
+				echo "<p>" . esc_html__( "Missing »timezone_string« entry in options table. Please fix! Otherwise execution times could be wrong.", 'cron-logger' ) . "</p>";
 				$time = new \DateTime( 'now' );
 			}
 			$args = $this->getArgs();
 			?>
 
-            <form method="GET" action="<?php echo admin_url( 'tools.php' ); ?>">
+            <form method="GET" action="<?php echo esc_url( admin_url( 'tools.php' ) ); ?>">
                 <input type="hidden" name="page" value="cron-logs"/>
                 <label>
 					<?php _e( 'Minimum duration of x seconds', Plugin::DOMAIN ); ?><br>
                     <input type="number"
-                           name="<?php echo self::ARG_DURATION_MIN ?>"
+                           name="<?php echo esc_attr( self::ARG_DURATION_MIN ); ?>"
                            placeholder="x"
-                           value="<?php echo $args->duration_min; ?>"/>
+                           value="<?php echo esc_attr( $args->duration_min ); ?>"/>
                 </label><br>
                 <label>
 					<?php _e( "Page", Plugin::DOMAIN ); ?><br>
                     <input type="number" min="1"
-                           name="<?php echo self::ARG_PAGE ?>" required
-                           value="<?php echo $args->page; ?>"/>
+                           name="<?php echo esc_attr( self::ARG_PAGE ); ?>" required
+                           value="<?php echo esc_attr( $args->page ); ?>"/>
                 </label><br>
                 <label>
 					<?php _e( 'Logs per Page', Plugin::DOMAIN ); ?><br>
                     <input type="number" min="1" max="50" maxlength="2"
-                           name="<?php echo self::ARG_ITEMS ?>"
+                           name="<?php echo esc_attr( self::ARG_ITEMS ); ?>"
                            required
-                           value="<?php echo $args->items; ?>"/>
+                           value="<?php echo esc_attr( $args->items ); ?>"/>
                 </label>
 
 				<?php
@@ -100,14 +100,14 @@ class Page extends Component {
 
             <div style="display: flex; gap: 25px;">
                 <?php submit_button( __( 'Toggle open/close log details', Plugin::DOMAIN ), 'small', "toggle_logs" ); ?>
-                <p class="submit"><button class="button button-small button-link-delete" id="cron-logger-cleanup">Cleanup</button></p>
+                <p class="submit"><button class="button button-small button-link-delete" id="cron-logger-cleanup"><?php esc_html_e( 'Cleanup', 'cron-logger' ); ?></button></p>
             </div>
 
             <table class="widefat striped">
                 <thead>
                 <tr>
                     <th style="width: 145px;" scope="col"
-                        title="<?php echo $timezone; ?>">
+                        title="<?php echo esc_attr( $timezone ); ?>">
 						<?php _e( 'Executed', Plugin::DOMAIN ); ?>
                     </th>
                     <th style="width: 90px;" scope="col"><?php _e( 'Duration', Plugin::DOMAIN ); ?></th>
@@ -124,22 +124,22 @@ class Page extends Component {
 				foreach ( $list as $log ) {
 					?>
                     <tr style="cursor: pointer"
-                        data-log-id="<?php echo $log->id; ?>">
+                        data-log-id="<?php echo esc_attr( $log->id ); ?>">
                         <td style="border-top: 3px solid #333;"><?php
 							$time->setTimestamp( $log->executed );
-							echo $time->format( "Y-m-d H:i:s" );
+							echo esc_html( $time->format( "Y-m-d H:i:s" ) );
 							?></td>
-                        <td style="border-top: 3px solid #333;"><?php echo $this->getDurationString( $log->duration ); ?></td>
-                        <td style="border-top: 3px solid #333;"><?php echo $log->info; ?></td>
+                        <td style="border-top: 3px solid #333;"><?php echo esc_html( $this->getDurationString( $log->duration ) ); ?></td>
+                        <td style="border-top: 3px solid #333;"><?php echo esc_html( $log->info ); ?></td>
                     </tr>
 					<?php
 					$sublist = $this->plugin->log->getSublist( $log->id );
 					foreach ( $sublist as $sub ) {
 						?>
-                        <tr data-parent-id="<?php echo $log->id; ?>">
+                        <tr data-parent-id="<?php echo esc_attr( $log->id ); ?>">
                             <td></td>
-                            <td><?php echo $this->getDurationString( $sub->duration ); ?></td>
-                            <td><?php echo $sub->info; ?></td>
+                            <td><?php echo esc_html( $this->getDurationString( $sub->duration ) ); ?></td>
+                            <td><?php echo esc_html( $sub->info ); ?></td>
                         </tr>
 						<?php
 					}
@@ -167,15 +167,22 @@ class Page extends Component {
                 });
             });
             const cleanupButton = document.getElementById("cron-logger-cleanup");
+            const cleanupNonce = <?php echo wp_json_encode( wp_create_nonce( Ajax::CLEANUP_NONCE_ACTION ) ); ?>;
             cleanupButton.addEventListener("click", function(e){
                 e.preventDefault();
-                cleanupButton.removeEventListener("click", this);
                 cleanupButton.innerHTML = "<span class='spinner is-active'></span>";
-                fetch("/wp-admin/admin-ajax.php?action=cron_logger_cleanup")
+                fetch(<?php echo wp_json_encode( admin_url( 'admin-ajax.php' ) ); ?>, {
+                    method: "POST",
+                    headers: {"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"},
+                    body: new URLSearchParams({
+                        action: "cron_logger_cleanup",
+                        nonce: cleanupNonce
+                    })
+                })
                     .then(() => {
                         window.location.reload();
                     });
-            })
+            }, {once: true})
         </script>
 		<?php
 
