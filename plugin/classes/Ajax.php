@@ -5,13 +5,22 @@ namespace CronLogger;
 use CronLogger\Components\Component;
 
 class Ajax extends Component {
+
+	const CLEANUP_NONCE_ACTION = 'cron_logger_cleanup';
+
 	public function onCreate(): void {
 		parent::onCreate();
 		add_action('wp_ajax_cron_logger_cleanup', [$this, 'cleanup']);
 	}
 
 	function cleanup(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You are not allowed to clean cron logs.', Plugin::DOMAIN ) ), 403 );
+		}
+
+		check_ajax_referer( self::CLEANUP_NONCE_ACTION, 'nonce' );
 		$this->plugin->log->clean();
-		echo "clean!";
+		wp_send_json_success();
 	}
+
 }
