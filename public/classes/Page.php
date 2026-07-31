@@ -167,15 +167,22 @@ class Page extends Component {
                 });
             });
             const cleanupButton = document.getElementById("cron-logger-cleanup");
+            const cleanupNonce = <?php echo wp_json_encode( wp_create_nonce( Ajax::CLEANUP_NONCE_ACTION ) ); ?>;
             cleanupButton.addEventListener("click", function(e){
                 e.preventDefault();
-                cleanupButton.removeEventListener("click", this);
                 cleanupButton.innerHTML = "<span class='spinner is-active'></span>";
-                fetch("/wp-admin/admin-ajax.php?action=cron_logger_cleanup")
+                fetch(<?php echo wp_json_encode( admin_url( 'admin-ajax.php' ) ); ?>, {
+                    method: "POST",
+                    headers: {"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"},
+                    body: new URLSearchParams({
+                        action: "cron_logger_cleanup",
+                        nonce: cleanupNonce
+                    })
+                })
                     .then(() => {
                         window.location.reload();
                     });
-            })
+            }, {once: true})
         </script>
 		<?php
 
