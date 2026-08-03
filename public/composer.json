@@ -1,5 +1,6 @@
 {
   "name": "palasthotel/cron-logger",
+  "license": "GPL-3.0-or-later",
   "description": "Cron logging service",
   "autoload": {
     "psr-4": {

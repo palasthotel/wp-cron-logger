@@ -4,12 +4,14 @@
  * Description: Logs for wp-cron.php runs.
  * Version: 1.3.4
  * Requires at least: 5.3
- * Tested up to: 6.8.2
+ * Tested up to: 7.0.2
  * Author: Palasthotel <rezeption@palasthotel.de> (Edward Bock)
  * Author URI: https://palasthotel.de
  * Domain Path: /languages
  * Text Domain: cron-logger
  * Requires PHP: 8.1
+ * License: GPL-3.0-or-later
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * @copyright Palasthotel
  * @package Palasthotel\CronLogger
  */
