@@ -1,5 +1,9 @@
 # Contributing
 
+## Code of Conduct
+
+The project has a [Code of Conduct](./CODE_OF_CONDUCT.md) to which all contributors must adhere.
+
 ## Branching
 
 `main` is the default branch and always reflects what is released, or about to
