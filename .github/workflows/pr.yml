@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   php-lint:
     name: PHP syntax check (${{ matrix.php-version }})
