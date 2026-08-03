@@ -10,6 +10,8 @@
  * Domain Path: /languages
  * Text Domain: cron-logger
  * Requires PHP: 8.1
+ * License: GPL-3.0-or-later
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * @copyright Palasthotel
  * @package Palasthotel\CronLogger
  */
