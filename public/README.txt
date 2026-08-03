@@ -4,7 +4,7 @@ Donate link: http://palasthotel.de/
 Tags: tool, log, debug, cron, wp-cron
 Requires at least: 5.3
 Tested up to: 6.8.2
-Stable tag: 1.3.4
+Stable tag: 1.3.5
 Requires PHP: 8.1
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -28,6 +28,11 @@ Have you ever wondered what you WordPress is doing in wp-cron.php? Now you can s
 
 
 == Changelog ==
+
+= 1.3.5 =
+**Bug Fixes**
+* keep the markup the plugin logs itself (6e049e3)
+* register the cron hook callbacks with zero accepted args (reported by Andis Grossteins) (80cdcc1), closes #9
 
 = 1.3.4 =
 **Bug Fixes**

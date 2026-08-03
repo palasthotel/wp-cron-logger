@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.5](https://github.com/palasthotel/wp-cron-logger/compare/v1.3.4...v1.3.5) (2026-08-03)
+
+
+### Bug Fixes
+
+* keep the markup the plugin logs itself ([6e049e3](https://github.com/palasthotel/wp-cron-logger/commit/6e049e30dc05af9765a7e4e7b70cf0860a751365))
+* register the cron hook callbacks with zero accepted args (reported by Andis Grossteins) ([80cdcc1](https://github.com/palasthotel/wp-cron-logger/commit/80cdcc13c0106d7e226f184cea30e7fc11731933)), closes [#9](https://github.com/palasthotel/wp-cron-logger/issues/9)
+
 ## [1.3.4](https://github.com/palasthotel/wp-cron-logger/compare/v1.3.3...v1.3.4) (2026-07-31)
 
 
