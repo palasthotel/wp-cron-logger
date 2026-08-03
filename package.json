@@ -1,6 +1,6 @@
 {
 	"name": "@palasthotel/cron-logger",
-	"version": "1.3.4",
+	"version": "1.3.5",
 	"description": "Logs for wp-cron.php runs.",
 	"license": "GPL-3.0-or-later",
 	"author": {
