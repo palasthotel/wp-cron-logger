@@ -5,6 +5,17 @@ on:
   push:
     tags:
       - "v*"
+  # Manual re-run for a release whose deploy failed. A tag ruleset stops tags from
+  # being moved, and re-running a tag event replays the workflow file as it was at
+  # that tag - so a fix to this file can only be picked up by dispatching it from a
+  # branch. It deploys the content of the ref you select;
+  # bin/version-checker.sh aborts before anything is published if they disagree.
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to deploy, without the prefix (e.g. 1.3.5)"
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -14,7 +25,7 @@ jobs:
     name: Build and deploy to WordPress.org
     runs-on: ubuntu-latest
     env:
-      RELEASE_TAG: ${{ github.ref_name }}
+      RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && format('v{0}', github.event.inputs.version) || github.ref_name }}
     steps:
       - name: Notify on start
         run: |
@@ -60,6 +71,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         continue-on-error: true
         with:
+          # Explicit, because on a dispatch run github.ref is a branch and the
+          # action would otherwise not find the release.
+          tag_name: ${{ env.RELEASE_TAG }}
           files: ./cron-logger.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
