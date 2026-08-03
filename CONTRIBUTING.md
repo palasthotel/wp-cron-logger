@@ -33,6 +33,22 @@ a conventional commit — that is the message release-please reads.
 To force a specific version regardless of commit types, add a `Release-As: x.y.z`
 footer to a commit.
 
+### Which changes get `fix:` or `feat:`
+
+Only changes that matter to someone using the plugin. `fix:` and `feat:` decide
+the version *and* write the line that ends up in the changelog on the
+wordpress.org plugin page, so the question to ask before committing is whether a
+user of the plugin would care about that line.
+
+Everything else takes a type that releases nothing — workflows and CI, release
+tooling, repository documentation, internal refactoring, and anything touching
+files that are not shipped. As a rule of thumb, a change confined to files
+outside `public/` is almost never a `fix:`.
+
+That includes hardening. Blocking direct access to a file that is not part of the
+download is `chore:`, not `fix:` — nothing changes for anyone who installed the
+plugin.
+
 ## Versions
 
 Never edit version numbers by hand. `package.json`, `CHANGELOG.md`,
