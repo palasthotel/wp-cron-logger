@@ -13,7 +13,7 @@
 		"url": "https://github.com/palasthotel/wp-cron-logger/issues"
 	},
 	"scripts": {
-		"pack": "./bin/pack.sh",
+		"pack": "SLUG=cron-logger bash ../github-workflows/wp-plugin/bin/pack.sh",
 		"wp-env": "wp-env",
 		"wp-env:start": "wp-env start",
 		"wp-env:stop": "wp-env stop"
