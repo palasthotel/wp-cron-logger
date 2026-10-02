@@ -65,22 +65,39 @@ alone.
 | Path | Description |
 |---|---|
 | `public/` | the plugin as it is shipped to WordPress.org |
-| `plugin.php` | dev wrapper, loads `public/plugin.php` and registers the activation hooks for local `wp-env` use |
-| `bin/` | release helper scripts |
+| `public/plugin.php` | main file: plugin header and the `CronLogger\Plugin` class |
+| `public/classes/` | the components, autoloaded via `public/vendor/` (PSR-4, `public/composer.json`) |
+| `public/README.txt` | the wordpress.org listing |
+| `plugin.php` | development wrapper, loads `public/plugin.php` and registers the activation hooks; never deployed |
 | `.github/workflows/` | CI/CD |
 
 Only `public/` is shipped. Everything outside it stays repository-only.
 
+The main file `public/plugin.php` must keep its name. WordPress identifies an installed
+plugin by `<directory>/<main file>` and stores that pair in `active_plugins`; renaming it
+deactivates the plugin on every site at the next update.
+
 ## Local environment
 
+There is nothing to build or install. wp-env runs without a configuration file and
+mounts the repository as the plugin through the development wrapper:
+
 ```sh
-npm install
-npm run wp-env:start   # http://localhost:8080
-npm run pack           # → cron-logger.zip
+npx @wordpress/env start      # http://localhost:8888, admin / password
+npx @wordpress/env run cli wp cron event run --due-now   # produces a log entry
 ```
+
+`npm run pack` stages the payload in `build/cron-logger/` and zips it to
+`cron-logger.zip` — the same payload the release deploys. It runs the shared script from
+[palasthotel/github-workflows](https://github.com/palasthotel/github-workflows), which has
+to be checked out next to this repository, and needs `composer`.
+
+`package.json` holds nothing but the version and the `pack` script, and has to stay:
+release-please and the shared release scripts read the version from it.
 
 ## Checks
 
-Every PR runs `php -l` against PHP 8.1, 8.2, 8.3 and 8.4, and packs the plugin
-once. The plugin declares `Requires PHP: 8.1` in both the plugin header and
-`public/composer.json`; raise both together if that changes.
+Every PR runs `php -l` against PHP 8.1, 8.2, 8.3 and 8.4, packs the plugin and checks
+the payload, and checks the version carriers agree. The plugin declares
+`Requires PHP: 8.1` in both the plugin header and `public/composer.json`; raise both
+together if that changes.

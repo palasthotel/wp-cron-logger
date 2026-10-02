@@ -1,6 +1,21 @@
-# WordPress Cron Logger
+# Cron Logger (WordPress-Plugin)
 
-With Cron Logger all wp-cron.php runs are logged. They are available in **Tools** -> **Cron Logs**.
+Cron Logger logs every run of `wp-cron.php` and every cron hook it executes, with its
+duration. The logs are in **Tools → Cron Logs**, for users with `manage_options`.
+It is available on [WordPress.org](https://wordpress.org/plugins/cron-logger/).
+
+## What it logs
+
+| Entry | When |
+|---|---|
+| a run of `wp-cron.php` | every request with `DOING_CRON`, from `plugins_loaded` to `shutdown` |
+| each cron hook | start and finish, with the seconds it took |
+| scheduled posts | the status change of every post `publish_future_post` publishes |
+| Solr cron | `solr_cron_start` / `solr_cron_finish` of the Solr plugin, if present |
+
+Logs older than 30 days are removed by a daily cron event and after every run; the
+**Cleanup** button on the log page does the same on demand. Deleting the plugin
+(`uninstall.php`) drops the log table and the plugin's option.
 
 ## Custom logs
 
@@ -33,13 +48,21 @@ function my_plugin_cron_logger_expire(int $days){
 add_filter("cron_logger_expire", "my_plugin_cron_logger_expire");
 ```
 
+## Hooks
+
+| Hook | Type | Purpose |
+|---|---|---|
+| `cron_logger_init` | action | receives the `CronLogger\Plugin` instance to log your own runs |
+| `cron_logger_expire` | filter | days after which logs are removed (default 30) |
+| `cron_logger_wp_cron_start` | action | a `wp-cron.php` run starts being logged |
+| `cron_logger_wp_cron_shutdown` | action | a `wp-cron.php` run is finished |
+
 ## Repository layout
 
 | Path | Description |
 |---|---|
 | `public/` | the plugin as it is shipped to WordPress.org |
-| `plugin.php` | dev wrapper for local `wp-env` use |
-| `bin/` | release helper scripts |
+| `plugin.php` | development wrapper that loads `public/`; never deployed |
 | `.github/workflows/` | CI/CD — see [.github/WORKFLOWS.md](.github/WORKFLOWS.md) |
 
 - **WordPress.org:** https://wordpress.org/plugins/cron-logger/
@@ -50,11 +73,7 @@ add_filter("cron_logger_expire", "my_plugin_cron_logger_expire");
 
 ## Development
 
-```sh
-npm install
-npm run wp-env:start   # http://localhost:8080
-npm run pack           # → cron-logger.zip
-```
+There is nothing to build. See [CONTRIBUTING.md](CONTRIBUTING.md) for the local setup.
 
 ## Releasing
 
@@ -66,4 +85,4 @@ merge the release PR. See [CONTRIBUTING.md](CONTRIBUTING.md) and
 
 ## License
 
-GNU General Public License v3.0 or later — see [public/LICENSE](public/LICENSE).
+GPL-3.0-or-later, see [LICENSE](LICENSE).

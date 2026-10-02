@@ -1,11 +1,12 @@
 {
 	"name": "@palasthotel/cron-logger",
 	"version": "1.3.4",
+	"private": true,
 	"description": "Logs for wp-cron.php runs.",
 	"license": "GPL-3.0-or-later",
 	"author": {
-		"name": "Edward Bock",
-		"email": "edward.bock@palasthotel.de",
+		"name": "Palasthotel",
+		"email": "webmaster@palasthotel.de",
 		"url": "https://palasthotel.de"
 	},
 	"repository": "git+https://github.com/palasthotel/wp-cron-logger.git",
@@ -13,19 +14,6 @@
 		"url": "https://github.com/palasthotel/wp-cron-logger/issues"
 	},
 	"scripts": {
-		"pack": "./bin/pack.sh",
-		"wp-env": "wp-env",
-		"wp-env:start": "wp-env start",
-		"wp-env:stop": "wp-env stop"
-	},
-	"devDependencies": {
-		"@wordpress/env": "^11.11.0"
-	},
-	"engines": {
-		"node": ">=22",
-		"npm": ">=10"
-	},
-	"volta": {
-		"node": "22.19.0"
+		"pack": "SLUG=cron-logger bash ../github-workflows/wp-plugin/bin/pack.sh"
 	}
 }

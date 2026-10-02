@@ -149,21 +149,18 @@ class Page extends Component {
             </table>
         </div>
         <script>
-            jQuery(function ($) {
-                const $logs = $('[data-log-id]');
-                $logs.on('click', function () {
-                    const id = $(this).attr('data-log-id');
-                    console.log('clicked', id);
-                    $('[data-parent-id=' + id + ']').toggle();
+            document.querySelectorAll("[data-log-id]").forEach(function (row) {
+                row.addEventListener("click", function () {
+                    document.querySelectorAll('[data-parent-id="' + row.dataset.logId + '"]').forEach(function (child) {
+                        child.style.display = child.style.display === "none" ? "" : "none";
+                    });
                 });
-                let isVisible = true;
-                $('[name=toggle_logs]').on('click', function () {
-                    if (isVisible) {
-                        $('[data-parent-id]').hide();
-                    } else {
-                        $('[data-log-id]').trigger('click');
-                    }
-                    isVisible = !isVisible;
+            });
+            let detailsVisible = true;
+            document.querySelector("[name=toggle_logs]").addEventListener("click", function () {
+                detailsVisible = !detailsVisible;
+                document.querySelectorAll("[data-parent-id]").forEach(function (child) {
+                    child.style.display = detailsVisible ? "" : "none";
                 });
             });
             const cleanupButton = document.getElementById("cron-logger-cleanup");

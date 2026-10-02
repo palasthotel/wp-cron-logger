@@ -149,7 +149,10 @@ class Log  extends Database {
 			"SELECT id FROM " . $this->table . " WHERE parent_id IS NULL ) AND parent_id IS NOT NULL" .
             ") as orphained_children";
 
+		// Children first, then the expired runs themselves, then whatever child
+		// lost its run some other way.
 		$this->wpdb->query( "DELETE FROM $table WHERE parent_id IN ($expiredParentIds)" );
+		$this->wpdb->query( "DELETE FROM $table WHERE id IN ($expiredParentIds)" );
 		$this->wpdb->query( "DELETE FROM $table WHERE id IN ($childIdsWithoutParent)" );
 	}
 
