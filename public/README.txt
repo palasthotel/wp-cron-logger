@@ -1,9 +1,9 @@
 === Cron Logger ===
 Contributors: edwardbock, palasthotel, janaeggebrecht
-Donate link: http://palasthotel.de/
+Donate link: https://palasthotel.de/
 Tags: tool, log, debug, cron, wp-cron
 Requires at least: 5.3
-Tested up to: 7.0.2
+Tested up to: 7.1.2
 Stable tag: 1.3.4
 Requires PHP: 8.1
 License: GPL-3.0-or-later
@@ -13,14 +13,14 @@ Logs wp-cron.php runs.
 
 == Description ==
 
-Have you ever wondered what you WordPress is doing in wp-cron.php? Now you can see it. This plugin logs every schedule.
+Have you ever wondered what your WordPress is doing in wp-cron.php? Now you can see it. This plugin logs every run of wp-cron.php and every cron hook it executes.
 
 == Installation ==
 
 1. Upload `cron-logger.zip` to the `/wp-content/plugins/` directory
 1. Extract the Plugin to a `cron-logger` Folder
 1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Habe a look in Tools -> Cron Logs
+1. Have a look in Tools -> Cron Logs
 
 == Frequently Asked Questions ==
 
@@ -34,7 +34,6 @@ Have you ever wondered what you WordPress is doing in wp-cron.php? Now you can s
 * bind the values interpolated into the log queries (85ad8b4)
 * deliver the orphaned child log cleanup and its database error fix (758a81f)
 * escape the log page output (fc68ebb)
-* release (ab71f59)
 * restrict the log cleanup endpoint to administrators (CVE-2025-53266, reported by Nguyen Xuan Chien, fix by Quentin Lienhardt) (1ec1272)
 
 = 1.3.3 =
