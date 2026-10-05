@@ -3,7 +3,7 @@ Contributors: edwardbock, palasthotel, janaeggebrecht
 Donate link: https://palasthotel.de/
 Tags: tool, log, debug, cron, wp-cron
 Requires at least: 5.3
-Tested up to: 7.1.2
+Tested up to: 7.1
 Stable tag: 1.3.5
 Requires PHP: 8.1
 License: GPL-3.0-or-later
