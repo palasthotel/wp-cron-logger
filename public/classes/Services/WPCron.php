@@ -47,9 +47,10 @@ class WPCron extends Component {
 			}
 		}
 
-		$msg = __( "No registered hooks? Something went wrong. There should be at least WordPress core cron hooks.", Plugin::DOMAIN );
+		$msg = __( "No registered hooks? Something went wrong. There should be at least WordPress core cron hooks.", 'cron-logger' );
 		if ( count( $registered ) > 0 ) {
-			$msg = sprintf( __( "Registered hooks: %s", Plugin::DOMAIN ), implode( ', ', $registered ) );
+			/* translators: %s: comma-separated list of cron hook names */
+			$msg = sprintf( __( "Registered hooks: %s", 'cron-logger' ), implode( ', ', $registered ) );
 		}
 		$this->plugin->log->addInfo( $msg );
 	}

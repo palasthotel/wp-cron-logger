@@ -26,8 +26,8 @@ class Page extends Component {
 	public function menu_pages(): void {
 		add_submenu_page(
 			'tools.php',
-			__( 'Cron Logs', Plugin::DOMAIN ),
-			__( 'Cron Logs', Plugin::DOMAIN ),
+			__( 'Cron Logs', 'cron-logger' ),
+			__( 'Cron Logs', 'cron-logger' ),
 			'manage_options',
 			'cron-logs',
 			array(
@@ -73,20 +73,20 @@ class Page extends Component {
             <form method="GET" action="<?php echo esc_url( admin_url( 'tools.php' ) ); ?>">
                 <input type="hidden" name="page" value="cron-logs"/>
                 <label>
-					<?php _e( 'Minimum duration of x seconds', Plugin::DOMAIN ); ?><br>
+					<?php esc_html_e( 'Minimum duration of x seconds', 'cron-logger' ); ?><br>
                     <input type="number"
                            name="<?php echo esc_attr( self::ARG_DURATION_MIN ); ?>"
                            placeholder="x"
                            value="<?php echo esc_attr( $args->duration_min ); ?>"/>
                 </label><br>
                 <label>
-					<?php _e( "Page", Plugin::DOMAIN ); ?><br>
+					<?php esc_html_e( "Page", 'cron-logger' ); ?><br>
                     <input type="number" min="1"
                            name="<?php echo esc_attr( self::ARG_PAGE ); ?>" required
                            value="<?php echo esc_attr( $args->page ); ?>"/>
                 </label><br>
                 <label>
-					<?php _e( 'Logs per Page', Plugin::DOMAIN ); ?><br>
+					<?php esc_html_e( 'Logs per Page', 'cron-logger' ); ?><br>
                     <input type="number" min="1" max="50" maxlength="2"
                            name="<?php echo esc_attr( self::ARG_ITEMS ); ?>"
                            required
@@ -94,12 +94,12 @@ class Page extends Component {
                 </label>
 
 				<?php
-				submit_button( __( "Filter", Plugin::DOMAIN ) );
+				submit_button( __( "Filter", 'cron-logger' ) );
 				?>
             </form>
 
             <div style="display: flex; gap: 25px;">
-                <?php submit_button( __( 'Toggle open/close log details', Plugin::DOMAIN ), 'small', "toggle_logs" ); ?>
+                <?php submit_button( __( 'Toggle open/close log details', 'cron-logger' ), 'small', "toggle_logs" ); ?>
                 <p class="submit"><button class="button button-small button-link-delete" id="cron-logger-cleanup"><?php esc_html_e( 'Cleanup', 'cron-logger' ); ?></button></p>
             </div>
 
@@ -108,10 +108,10 @@ class Page extends Component {
                 <tr>
                     <th style="width: 145px;" scope="col"
                         title="<?php echo esc_attr( $timezone ); ?>">
-						<?php _e( 'Executed', Plugin::DOMAIN ); ?>
+						<?php esc_html_e( 'Executed', 'cron-logger' ); ?>
                     </th>
-                    <th style="width: 90px;" scope="col"><?php _e( 'Duration', Plugin::DOMAIN ); ?></th>
-                    <th scope="col"><?php _e( 'Info', Plugin::DOMAIN ); ?></th>
+                    <th style="width: 90px;" scope="col"><?php esc_html_e( 'Duration', 'cron-logger' ); ?></th>
+                    <th scope="col"><?php esc_html_e( 'Info', 'cron-logger' ); ?></th>
                 </tr>
                 </thead>
                 <tbody>

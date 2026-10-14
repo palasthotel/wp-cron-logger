@@ -102,30 +102,43 @@ class Log  extends Database {
 		$page   = max( 1, absint( $args->page ) );
 		$offset = $count * ( $page - 1 );
 
-		$sql    = "SELECT * FROM " . $this->table . " WHERE parent_id IS NULL";
-		$params = array();
+		$wpdb  = $this->wpdb;
+		$table = $this->table;
 
+		// The table name is $wpdb->prefix plus a constant. It cannot be a placeholder:
+		// %i needs WordPress 6.2 and the plugin supports 5.3.
 		if ( $args->min_seconds != null ) {
-			$sql      .= " AND duration >= %d";
-			$params[] = absint( $args->min_seconds );
+			return $wpdb->get_results(
+				$wpdb->prepare(
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name, see above
+					"SELECT * FROM {$table} WHERE parent_id IS NULL AND duration >= %d ORDER BY executed DESC LIMIT %d, %d",
+					absint( $args->min_seconds ),
+					$offset,
+					$count
+				)
+			);
 		}
 
-		$sql      .= " ORDER BY executed DESC LIMIT %d, %d";
-		$params[] = $offset;
-		$params[] = $count;
-
-		return $this->wpdb->get_results(
-			$this->wpdb->prepare( $sql, ...$params )
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name, see getList()
+				"SELECT * FROM {$table} WHERE parent_id IS NULL ORDER BY executed DESC LIMIT %d, %d",
+				$offset,
+				$count
+			)
 		);
 	}
 
 	function getSublist( $log_id, $count = 50, $page = 0 ): array {
 		$count  = absint( $count );
 		$offset = $count * absint( $page );
+		$wpdb   = $this->wpdb;
+		$table  = $this->table;
 
-		return $this->wpdb->get_results(
-			$this->wpdb->prepare(
-				"SELECT * FROM " . $this->table . " WHERE parent_id = %d ORDER BY id DESC LIMIT %d, %d",
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name, see getList()
+				"SELECT * FROM {$table} WHERE parent_id = %d ORDER BY id DESC LIMIT %d, %d",
 				absint( $log_id ),
 				$offset,
 				$count
@@ -134,26 +147,29 @@ class Log  extends Database {
 	}
 
 	function clean(): void {
-		$table     = $this->table;
-		// absint because the value comes from a filter any site can implement,
-		// and it is interpolated into the INTERVAL expression below.
-		$days      = absint( apply_filters( Plugin::FILTER_EXPIRE, 30 ) );
-		$expiredParentIds = "SELECT id FROM (" .
-		             "SELECT id FROM " . $this->table . " WHERE " .
-		             "parent_id IS NULL AND " .
-		             "executed < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL $days day))" .
-		             ") as expired_parents";
-
-		$childIdsWithoutParent = "SELECT id FROM (" .
-            "SELECT id FROM " . $this->table . " WHERE parent_id NOT IN ( ".
-			"SELECT id FROM " . $this->table . " WHERE parent_id IS NULL ) AND parent_id IS NOT NULL" .
-            ") as orphained_children";
+		$wpdb  = $this->wpdb;
+		$table = $this->table;
+		$days  = absint( apply_filters( Plugin::FILTER_EXPIRE, 30 ) );
 
 		// Children first, then the expired runs themselves, then whatever child
-		// lost its run some other way.
-		$this->wpdb->query( "DELETE FROM $table WHERE parent_id IN ($expiredParentIds)" );
-		$this->wpdb->query( "DELETE FROM $table WHERE id IN ($expiredParentIds)" );
-		$this->wpdb->query( "DELETE FROM $table WHERE id IN ($childIdsWithoutParent)" );
+		// lost its run some other way. The derived tables let MySQL delete from
+		// the table it selects from. Table name: see getList().
+		$wpdb->query(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name, see getList()
+				"DELETE FROM {$table} WHERE parent_id IN ( SELECT id FROM ( SELECT id FROM {$table} WHERE parent_id IS NULL AND executed < UNIX_TIMESTAMP( DATE_SUB( NOW(), INTERVAL %d DAY ) ) ) AS expired_parents )",
+				$days
+			)
+		);
+		$wpdb->query(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name, see getList()
+				"DELETE FROM {$table} WHERE id IN ( SELECT id FROM ( SELECT id FROM {$table} WHERE parent_id IS NULL AND executed < UNIX_TIMESTAMP( DATE_SUB( NOW(), INTERVAL %d DAY ) ) ) AS expired_parents )",
+				$days
+			)
+		);
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared -- no values, only the table name, see getList()
+		$wpdb->query( "DELETE FROM {$table} WHERE id IN ( SELECT id FROM ( SELECT id FROM {$table} WHERE parent_id NOT IN ( SELECT id FROM {$table} WHERE parent_id IS NULL ) AND parent_id IS NOT NULL ) AS orphaned_children )" );
 	}
 
 	function createTables() {
