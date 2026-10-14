@@ -101,7 +101,7 @@ release-please and the shared release scripts read the version from it.
 
 ## Checks
 
-Every PR runs `php -l` against PHP 8.1, 8.2, 8.3 and 8.4, packs the plugin and checks
+Every PR runs `php -l` against PHP 8.1 to 8.5, packs the plugin and checks
 the payload, and checks the version carriers agree. The plugin declares
 `Requires PHP: 8.1` in both the plugin header and `public/composer.json`; raise both
 together if that changes.

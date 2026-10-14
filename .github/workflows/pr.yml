@@ -15,7 +15,7 @@ jobs:
       slug: cron-logger
       dev-plugin-name: Cron Logger - DEV
       # The plugin header declares Requires PHP: 8.1
-      php-versions: '["8.1", "8.2", "8.3", "8.4"]'
+      php-versions: '["8.1", "8.2", "8.3", "8.4", "8.5"]'
       required-files: |
         vendor/autoload.php
         vendor/composer/autoload_static.php

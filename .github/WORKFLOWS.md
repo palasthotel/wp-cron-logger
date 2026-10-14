@@ -15,7 +15,7 @@ What is specific to this plugin:
 | version file | `package.json` (`release-type: node`) - keep it, release-please and the scripts read the version there |
 | build step | none |
 | composer | `public/composer.json` only provides the PSR-4 autoloader; the pack step runs `composer install --no-dev`, writes an optimized autoloader and drops `composer.json`/`composer.lock` from the payload |
-| PHP | `php -l` on 8.1 to 8.4, matching `Requires PHP: 8.1` |
+| PHP | `php -l` on 8.1 to 8.5, matching `Requires PHP: 8.1` |
 
 ## Version history note
 
